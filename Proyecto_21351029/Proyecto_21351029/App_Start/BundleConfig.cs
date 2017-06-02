@@ -24,7 +24,7 @@ namespace Proyecto_21351029
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
+                      "~/Content/bootstrap-darkly.css",
                       "~/Content/site.css"));
         }
     }

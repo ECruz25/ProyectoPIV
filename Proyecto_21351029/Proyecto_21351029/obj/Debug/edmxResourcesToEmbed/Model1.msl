@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ProyectoModelStoreContainer" CdmEntityContainer="ProyectoEntities">
+    <EntitySetMapping Name="Classes">
+      <EntityTypeMapping TypeName="ProyectoModel.Class">
+        <MappingFragment StoreEntitySet="Classes">
+          <ScalarProperty Name="class_code" ColumnName="class_code" />
+          <ScalarProperty Name="tutor_code" ColumnName="tutor_code" />
+          <ScalarProperty Name="class_name" ColumnName="class_name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Requests">
+      <EntityTypeMapping TypeName="ProyectoModel.Request">
+        <MappingFragment StoreEntitySet="Requests">
+          <ScalarProperty Name="request_time" ColumnName="request_time" />
+          <ScalarProperty Name="request_code" ColumnName="request_code" />
+          <ScalarProperty Name="account_number" ColumnName="account_number" />
+          <ScalarProperty Name="request_date" ColumnName="request_date" />
+          <ScalarProperty Name="date_requested" ColumnName="date_requested" />
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="class_code" ColumnName="class_code" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Tutorials">
+      <EntityTypeMapping TypeName="ProyectoModel.Tutorial">
+        <MappingFragment StoreEntitySet="Tutorials">
+          <ScalarProperty Name="student_amount" ColumnName="student_amount" />
+          <ScalarProperty Name="tutorial_code" ColumnName="tutorial_code" />
+          <ScalarProperty Name="tutor_code" ColumnName="tutor_code" />
+          <ScalarProperty Name="class_code" ColumnName="class_code" />
+          <ScalarProperty Name="tutorial_date" ColumnName="tutorial_date" />
+          <ScalarProperty Name="tutorial_time" ColumnName="tutorial_time" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="ProyectoModel.User">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="account_number" ColumnName="account_number" />
+          <ScalarProperty Name="complete_name" ColumnName="complete_name" />
+          <ScalarProperty Name="password" ColumnName="password" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="phone_number" ColumnName="phone_number" />
+          <ScalarProperty Name="role" ColumnName="role" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

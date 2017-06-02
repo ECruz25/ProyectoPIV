@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Proyecto_21351029.Tutorial>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New Tutorial", "Create")
+</p>
+<p>
+    @Html.ActionLink("Export Amount Of Students ", "ExportAmountOfTutorials")
+</p>
+<p>
+    @Html.ActionLink("Create New Request", "CreateRequest")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Tutor")
+        </th>
+        <th>
+            @Html.DisplayName("Class")
+        </th>
+        <th>
+            @Html.DisplayName("Date")
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.tutor_code)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.class_code)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.tutorial_date)
+        </td>
+        <td>
+            @Html.ActionLink("Subscribe", "Subscribe", new { id = item.tutorial_code }) |
+            @Html.ActionLink("Edit", "Edit", new { id=item.tutorial_code }) |
+            @Html.ActionLink("Details", "Details", new { id=item.tutorial_code }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.tutorial_code })
+        </td>
+    </tr>
+}
+
+</table>

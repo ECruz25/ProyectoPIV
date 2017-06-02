@@ -1,0 +1,222 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ProyectoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Classes">
+          <Key>
+            <PropertyRef Name="class_code" />
+          </Key>
+          <Property Name="class_code" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tutor_code" Type="text" Nullable="false" />
+          <Property Name="class_name" Type="text" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Requests">
+          <Key>
+            <PropertyRef Name="request_code" />
+          </Key>
+          <Property Name="request_code" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="account_number" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="request_date" Type="date" Nullable="false" />
+          <Property Name="date_requested" Type="date" Nullable="false" />
+          <Property Name="status" Type="text" Nullable="false" />
+          <Property Name="class_code" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="request_time" Type="time" Precision="7" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Proyecto.dbo.Subcriptions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Subcriptions">
+          <Key>
+            <PropertyRef Name="subcription_code" />
+            <PropertyRef Name="account_number" />
+            <PropertyRef Name="tutorial_code" />
+          </Key>
+          <Property Name="subcription_code" Type="varchar" MaxLength="9" Nullable="false" />
+          <Property Name="account_number" Type="varchar" MaxLength="9" Nullable="false" />
+          <Property Name="tutorial_code" Type="varchar" MaxLength="9" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tutorials">
+          <Key>
+            <PropertyRef Name="tutorial_code" />
+          </Key>
+          <Property Name="tutorial_code" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tutor_code" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="class_code" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tutorial_date" Type="date" Nullable="false" />
+          <Property Name="tutorial_time" Type="time" Precision="7" Nullable="false" />
+          <Property Name="student_amount" Type="int" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="account_number" />
+          </Key>
+          <Property Name="account_number" Type="varchar" MaxLength="8" Nullable="false" />
+          <Property Name="complete_name" Type="text" Nullable="false" />
+          <Property Name="password" Type="text" Nullable="false" />
+          <Property Name="email" Type="text" Nullable="false" />
+          <Property Name="phone_number" Type="varchar" MaxLength="9" />
+          <Property Name="role" Type="text" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="ProyectoModelStoreContainer">
+          <EntitySet Name="Classes" EntityType="Self.Classes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Requests" EntityType="Self.Requests" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tutorials" EntityType="Self.Tutorials" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Subcriptions" EntityType="Self.Subcriptions" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Subcriptions].[subcription_code] AS [subcription_code], 
+    [Subcriptions].[account_number] AS [account_number], 
+    [Subcriptions].[tutorial_code] AS [tutorial_code]
+    FROM [dbo].[Subcriptions] AS [Subcriptions]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ProyectoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Class">
+          <Key>
+            <PropertyRef Name="class_code" />
+          </Key>
+          <Property Name="class_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="tutor_code" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="class_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Request">
+          <Key>
+            <PropertyRef Name="request_code" />
+          </Key>
+          <Property Name="request_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="account_number" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="request_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="date_requested" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="status" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="class_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="request_time" Type="Time" Precision="7" />
+        </EntityType>
+        <EntityType Name="Tutorial">
+          <Key>
+            <PropertyRef Name="tutorial_code" />
+          </Key>
+          <Property Name="tutorial_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="tutor_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="class_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="tutorial_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="tutorial_time" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="student_amount" Type="Int32" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="account_number" />
+          </Key>
+          <Property Name="account_number" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="complete_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="phone_number" Type="String" MaxLength="9" FixedLength="false" Unicode="false" />
+          <Property Name="role" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="ProyectoEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Classes" EntityType="Self.Class" />
+          <EntitySet Name="Requests" EntityType="Self.Request" />
+          <EntitySet Name="Tutorials" EntityType="Self.Tutorial" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="Subcriptions" EntityType="ProyectoModel.Subcription" />
+        </EntityContainer>
+        <EntityType Name="Subcription">
+          <Key>
+            <PropertyRef Name="subcription_code" />
+            <PropertyRef Name="account_number" />
+            <PropertyRef Name="tutorial_code" />
+          </Key>
+          <Property Name="subcription_code" Type="String" Nullable="false" MaxLength="9" FixedLength="false" Unicode="false" />
+          <Property Name="account_number" Type="String" Nullable="false" MaxLength="9" FixedLength="false" Unicode="false" />
+          <Property Name="tutorial_code" Type="String" Nullable="false" MaxLength="9" FixedLength="false" Unicode="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ProyectoModelStoreContainer" CdmEntityContainer="ProyectoEntities">
+          <EntitySetMapping Name="Classes">
+            <EntityTypeMapping TypeName="ProyectoModel.Class">
+              <MappingFragment StoreEntitySet="Classes">
+                <ScalarProperty Name="class_code" ColumnName="class_code" />
+                <ScalarProperty Name="tutor_code" ColumnName="tutor_code" />
+                <ScalarProperty Name="class_name" ColumnName="class_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Requests">
+            <EntityTypeMapping TypeName="ProyectoModel.Request">
+              <MappingFragment StoreEntitySet="Requests">
+                <ScalarProperty Name="request_time" ColumnName="request_time" />
+                <ScalarProperty Name="request_code" ColumnName="request_code" />
+                <ScalarProperty Name="account_number" ColumnName="account_number" />
+                <ScalarProperty Name="request_date" ColumnName="request_date" />
+                <ScalarProperty Name="date_requested" ColumnName="date_requested" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="class_code" ColumnName="class_code" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tutorials">
+            <EntityTypeMapping TypeName="ProyectoModel.Tutorial">
+              <MappingFragment StoreEntitySet="Tutorials">
+                <ScalarProperty Name="student_amount" ColumnName="student_amount" />
+                <ScalarProperty Name="tutorial_code" ColumnName="tutorial_code" />
+                <ScalarProperty Name="tutor_code" ColumnName="tutor_code" />
+                <ScalarProperty Name="class_code" ColumnName="class_code" />
+                <ScalarProperty Name="tutorial_date" ColumnName="tutorial_date" />
+                <ScalarProperty Name="tutorial_time" ColumnName="tutorial_time" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="ProyectoModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="account_number" ColumnName="account_number" />
+                <ScalarProperty Name="complete_name" ColumnName="complete_name" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="phone_number" ColumnName="phone_number" />
+                <ScalarProperty Name="role" ColumnName="role" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Subcriptions">
+            <EntityTypeMapping TypeName="ProyectoModel.Subcription">
+              <MappingFragment StoreEntitySet="Subcriptions">
+                <ScalarProperty Name="tutorial_code" ColumnName="tutorial_code" />
+                <ScalarProperty Name="account_number" ColumnName="account_number" />
+                <ScalarProperty Name="subcription_code" ColumnName="subcription_code" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
