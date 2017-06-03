@@ -20,7 +20,7 @@ namespace Proyecto_21351029
         public string account_number { get; set; }
 
         [Required]
-        [Display(Name ="Fecha")]
+        [Display(Name = "Fecha")]
         [DataType(DataType.Date)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public System.DateTime request_date { get; set; }
@@ -32,7 +32,7 @@ namespace Proyecto_21351029
         [Required]
         [Display(Name = "Clase")]
         public string class_code { get; set; }
-        
+
         [Required]
         [Display(Name = "Hora")]
         public Nullable<System.TimeSpan> request_time { get; set; }

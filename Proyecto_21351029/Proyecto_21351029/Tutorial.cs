@@ -11,14 +11,38 @@ namespace Proyecto_21351029
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
+
     public partial class Tutorial
     {
         public string tutorial_code { get; set; }
+
+        [Required]
+        [Display(Name = "Docente")]
         public string tutor_code { get; set; }
+
+        [Required]
+        [Display(Name = "Clase")]
         public string class_code { get; set; }
+
+        [Required]
+        [Display(Name = "Fecha")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public System.DateTime tutorial_date { get; set; }
+
+        [Required]
+        [Display(Name = "Hora")]
         public System.TimeSpan tutorial_time { get; set; }
+
+        [Display(Name = "Cantidad De Alumnos")]
         public Nullable<int> student_amount { get; set; }
+
+        [Required]
+        [Display(Name = "Hora")]
+        [DataType(DataType.Time)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm}")]
+        public Nullable<System.DateTime> hour { get; set; }
     }
 }

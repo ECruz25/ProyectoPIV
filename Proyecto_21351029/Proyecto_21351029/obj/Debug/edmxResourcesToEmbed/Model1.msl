@@ -27,6 +27,7 @@
     <EntitySetMapping Name="Tutorials">
       <EntityTypeMapping TypeName="ProyectoModel.Tutorial">
         <MappingFragment StoreEntitySet="Tutorials">
+          <ScalarProperty Name="hour" ColumnName="hour" />
           <ScalarProperty Name="student_amount" ColumnName="student_amount" />
           <ScalarProperty Name="tutorial_code" ColumnName="tutorial_code" />
           <ScalarProperty Name="tutor_code" ColumnName="tutor_code" />

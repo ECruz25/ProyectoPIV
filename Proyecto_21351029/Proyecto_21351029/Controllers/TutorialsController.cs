@@ -45,9 +45,26 @@ namespace Proyecto_21351029.Controllers
         // GET: Tutorials/Create
         public ActionResult Create()
         {
+            List<SelectListItem> ClassCodes = new List<SelectListItem>();
+            List<SelectListItem> Teachers = new List<SelectListItem>();
+
+            var Users = from TempUser in db.Users
+                        select TempUser;
+
             var Classes = from TempClasses in db.Classes
                           select TempClasses;
-            List<SelectListItem> ClassCodes = new List<SelectListItem>();
+
+            foreach(var Teacher in Users)
+            {
+                if(Teacher.role == "Teacher")
+                {
+                    Teachers.Add(new SelectListItem
+                    {
+                        Text = Teacher.complete_name,
+                        Value = Teacher.account_number
+                    });
+                }
+            }
 
             foreach (var x in Classes)
             {
@@ -57,6 +74,9 @@ namespace Proyecto_21351029.Controllers
                     Value = x.class_code.ToString()
                 });
             }
+
+            ViewBag.ClassCodes = ClassCodes;
+            ViewBag.Teachers = Teachers;
             return View();
         }
         
@@ -65,18 +85,55 @@ namespace Proyecto_21351029.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "tutorial_code,tutor_code,class_code,tutorial_date,tutorial_time")] Tutorial tutorial)
+        public ActionResult Create([Bind(Include = "tutor_code,class_code,tutorial_date,hour")] Tutorial tutorial)
         {
             if (ModelState.IsValid)
             {
+                DateTime Date = new DateTime(Convert.ToDateTime(tutorial.hour).Year, Convert.ToDateTime(tutorial.hour).Month, Convert.ToDateTime(tutorial.hour).Day);
                 tutorial.tutorial_code = CreateCode(db.Tutorials.Count());
                 tutorial.student_amount = 0;
+                tutorial.tutorial_time = Convert.ToDateTime(tutorial.hour) - Date;
+                tutorial.hour = tutorial.tutorial_date + (Convert.ToDateTime(tutorial.hour) - Date);
                 db.Tutorials.Add(tutorial);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            else
+            {
+                List<SelectListItem> ClassCodes = new List<SelectListItem>();
+                List<SelectListItem> Teachers = new List<SelectListItem>();
 
-            return View(tutorial);
+                var Users = from TempUser in db.Users
+                            select TempUser;
+
+                var Classes = from TempClasses in db.Classes
+                              select TempClasses;
+
+                foreach (var Teacher in Users)
+                {
+                    if (Teacher.role == "Teacher")
+                    {
+                        Teachers.Add(new SelectListItem
+                        {
+                            Text = Teacher.complete_name,
+                            Value = Teacher.account_number
+                        });
+                    }
+                }
+
+                foreach (var x in Classes)
+                {
+                    ClassCodes.Add(new SelectListItem
+                    {
+                        Text = x.class_name,
+                        Value = x.class_code.ToString()
+                    });
+                }
+
+                ViewBag.ClassCodes = ClassCodes;
+                ViewBag.Teachers = Teachers;
+                return View();
+            }
         }
 
         // GET: Tutorials/Edit/5

@@ -51,13 +51,7 @@ namespace Proyecto_21351029.Controllers
                     Value = x.class_code.ToString()
                 });
             }
-            /*
-            RequestViewModel RequestView = new RequestViewModel()
-            {
-                class_codes = ClassCodes,
 
-            };
-            */
             ViewBag.ClassCodes = ClassCodes;
             return View();
         }
@@ -70,45 +64,18 @@ namespace Proyecto_21351029.Controllers
         {
             if (ModelState.IsValid)
             {
-                try
-                {
-                    TimeSpan duration = new TimeSpan(0, 12, 23, 3);
+                TimeSpan duration = new TimeSpan(0, 12, 23, 3);
 
-                    request.request_code = CreateCode(db.Requests.Count());
-                    request.date_requested = DateTime.Today;
-                    request.status = "Pending";
-                    request.account_number = "21351029";
-                    request.request_time = request.hour - request.date_requested;
-                    request.hour = request.request_date + (request.hour - request.date_requested);
+                request.request_code = CreateCode(db.Requests.Count());
+                request.date_requested = DateTime.Today;
+                request.status = "Pending";
+                request.account_number = "21351029";
+                request.request_time = request.hour - request.date_requested;
+                request.hour = request.request_date + (request.hour - request.date_requested);
 
-                    db.Requests.Add(request);
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
-                }
-                catch
-                {
-                    var Classes = from TempClasses in db.Classes
-                                  select TempClasses;
-                    List<SelectListItem> ClassCodes = new List<SelectListItem>();
-
-                    foreach (var x in Classes)
-                    {
-                        ClassCodes.Add(new SelectListItem
-                        {
-                            Text = x.class_name,
-                            Value = x.class_code.ToString()
-                        });
-                    }
-                    /*
-                    RequestViewModel RequestView = new RequestViewModel()
-                    {
-                        class_codes = ClassCodes,
-
-                    };
-                    */
-                    ViewBag.ClassCodes = ClassCodes;
-                    return RedirectToAction("Index");
-                }
+                db.Requests.Add(request);
+                db.SaveChanges();
+                return RedirectToAction("Index");
             }
             else
             {
@@ -136,13 +103,7 @@ namespace Proyecto_21351029.Controllers
                         Value = x.class_code.ToString()
                     });
                 }
-                /*
-                RequestViewModel RequestView = new RequestViewModel()
-                {
-                    class_codes = ClassCodes,
 
-                };
-                */
                 ViewBag.ClassCodes = ClassCodes;
                 return RedirectToAction("Index");
             }
