@@ -51,13 +51,13 @@ namespace Proyecto_21351029.Controllers
                     Value = x.class_code.ToString()
                 });
             }
-            
+            /*
             RequestViewModel RequestView = new RequestViewModel()
             {
                 class_codes = ClassCodes,
 
             };
-
+            */
             ViewBag.ClassCodes = ClassCodes;
             return View();
         }
@@ -66,9 +66,51 @@ namespace Proyecto_21351029.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult Create([Bind(Include = "request_date,class_code")] Request request)
+        public ActionResult Create([Bind(Include = "request_date,class_code,hour")] Request request)
         {
             if (ModelState.IsValid)
+            {
+                try
+                {
+                    TimeSpan duration = new TimeSpan(0, 12, 23, 3);
+
+                    request.request_code = CreateCode(db.Requests.Count());
+                    request.date_requested = DateTime.Today;
+                    request.status = "Pending";
+                    request.account_number = "21351029";
+                    request.request_time = request.hour - request.date_requested;
+                    request.hour = request.request_date + (request.hour - request.date_requested);
+
+                    db.Requests.Add(request);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch
+                {
+                    var Classes = from TempClasses in db.Classes
+                                  select TempClasses;
+                    List<SelectListItem> ClassCodes = new List<SelectListItem>();
+
+                    foreach (var x in Classes)
+                    {
+                        ClassCodes.Add(new SelectListItem
+                        {
+                            Text = x.class_name,
+                            Value = x.class_code.ToString()
+                        });
+                    }
+                    /*
+                    RequestViewModel RequestView = new RequestViewModel()
+                    {
+                        class_codes = ClassCodes,
+
+                    };
+                    */
+                    ViewBag.ClassCodes = ClassCodes;
+                    return RedirectToAction("Index");
+                }
+            }
+            else
             {
                 TimeSpan duration = new TimeSpan(0, 12, 23, 3);
 
@@ -76,43 +118,34 @@ namespace Proyecto_21351029.Controllers
                 request.date_requested = DateTime.Today;
                 request.status = "Pending";
                 request.account_number = "21351029";
-                request.request_time = duration;
+                request.request_time = request.hour - request.date_requested;
+                request.hour = request.request_date + (request.hour - request.date_requested);
 
                 db.Requests.Add(request);
                 db.SaveChanges();
+
+                var Classes = from TempClasses in db.Classes
+                              select TempClasses;
+                List<SelectListItem> ClassCodes = new List<SelectListItem>();
+
+                foreach (var x in Classes)
+                {
+                    ClassCodes.Add(new SelectListItem
+                    {
+                        Text = x.class_name,
+                        Value = x.class_code.ToString()
+                    });
+                }
+                /*
+                RequestViewModel RequestView = new RequestViewModel()
+                {
+                    class_codes = ClassCodes,
+
+                };
+                */
+                ViewBag.ClassCodes = ClassCodes;
                 return RedirectToAction("Index");
             }
-
-            return View(request);
-        }
-        
-        [HttpPost]
-        public ActionResult CreateRequest([Bind(Include = "request_date,class_code")] Request Request)
-        {
-            Tutorial Tutorial = new Tutorial();
-            TimeSpan duration = new TimeSpan(0, 12, 23, 3);
-
-            Request.request_code = CreateCode(db.Requests.Count());
-            Request.date_requested = DateTime.Today;
-            Request.status = "Pending";
-            Request.account_number = "21351029";
-            Request.request_time = duration;
-
-            /*
-            Request Request = new Request()
-            {
-                request_code = CreateCode(db.Requests.Count()),
-                account_number = "21351029",
-                class_code = "C-021",
-                date_requested = DateTime.Today,
-                //request_date = model.,
-                request_time = duration,
-                status = "pending"
-            };
-            */
-            db.Requests.Add(Request);
-            db.SaveChanges();
-            return RedirectToAction("Index");
         }
         
         // GET: Requests/Edit/5
@@ -183,13 +216,13 @@ namespace Proyecto_21351029.Controllers
 
         protected string CreateCode(int Amount)
         {
-            if (Found("T-" + Amount))
+            if (Found("R-" + Amount))
             {
                 return CreateCode(Amount + 1);
             }
             else
             {
-                return "T-" + Amount;
+                return "R-" + Amount;
             }
         }
 

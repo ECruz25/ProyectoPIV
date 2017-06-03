@@ -22,6 +22,11 @@ namespace Proyecto_21351029.Controllers
             return View(db.Tutorials.ToList());
         }
 
+        public ActionResult Export()
+        {
+            return View();
+        }
+
         // GET: Tutorials/Details/5
         public ActionResult Details(string id)
         {
@@ -40,6 +45,18 @@ namespace Proyecto_21351029.Controllers
         // GET: Tutorials/Create
         public ActionResult Create()
         {
+            var Classes = from TempClasses in db.Classes
+                          select TempClasses;
+            List<SelectListItem> ClassCodes = new List<SelectListItem>();
+
+            foreach (var x in Classes)
+            {
+                ClassCodes.Add(new SelectListItem
+                {
+                    Text = x.class_name,
+                    Value = x.class_code.ToString()
+                });
+            }
             return View();
         }
         
@@ -186,28 +203,55 @@ namespace Proyecto_21351029.Controllers
                             select Tutorial;
 
             StreamWriter File = new StreamWriter("C:\\Users\\Edwin\\Documents\\SaveHere\\Text.csv");
+            File.WriteLine("Tutorial Code, Amount, Date");
+            foreach (var x in Tutorials)
+            {
+                User User = (from Users in db.Users
+                             where Users.account_number == x.tutor_code
+                             select Users).FirstOrDefault();
+
+                Class Class = (from TempClass in db.Classes
+                               where TempClass.class_code == x.class_code
+                               select TempClass).FirstOrDefault();
+
+                File.WriteLine(x.tutorial_code + "," + Class.class_name + "," + x.tutorial_date + "," + x.tutorial_time + ","
+                                 + User.complete_name + "," + x.student_amount);
+            }
+            File.Flush();
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult ExportAfterDate(DateTime StartingDate)
+        {
+            var Tutorials = from Tutorial in db.Tutorials
+                            where Tutorial.tutorial_date >= StartingDate
+                            select Tutorial;
+
+            StreamWriter File = new StreamWriter("C:\\Users\\Edwin\\Documents\\SaveHere\\Text.csv");
             File.WriteLine("Tutorial Code, Amount");
             foreach (var x in Tutorials)
             {
                 File.WriteLine(x.tutorial_code + ", " + x.student_amount);
             }
             File.Flush();
-            return RedirectToAction("Index");
+            return View("Export");
         }
 
-        public ActionResult ExportAmountOfTutorialsByDate(DateTime AfterDate)
+        public ActionResult ExportBetweenDate(DateTime StartingDate, DateTime EndDate)
         {
             var Tutorials = from Tutorial in db.Tutorials
-                            where Tutorial.tutorial_date >= AfterDate
+                            where Tutorial.tutorial_date >= StartingDate && Tutorial.tutorial_date <= EndDate
                             select Tutorial;
 
-            StreamWriter File = new StreamWriter("C:\\Users\\Edwin\\Documents\\SaveHere\\Text.csv");
-            File.WriteLine("Class Code, ");
-            foreach (var x in Tutorials)
-            {
-                File.WriteLine(x.tutorial_code);
-            }
-            return View("Index");
+            return View("Export");
+        }
+        public ActionResult ExportBeforeDate(DateTime EndDate)
+        {
+            var Tutorials = from Tutorial in db.Tutorials
+                            where Tutorial.tutorial_date <= EndDate
+                            select Tutorial;
+
+            return View("Export");
         }
     }
 }

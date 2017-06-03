@@ -13,6 +13,7 @@
     <EntitySetMapping Name="Requests">
       <EntityTypeMapping TypeName="ProyectoModel.Request">
         <MappingFragment StoreEntitySet="Requests">
+          <ScalarProperty Name="hour" ColumnName="hour" />
           <ScalarProperty Name="request_time" ColumnName="request_time" />
           <ScalarProperty Name="request_code" ColumnName="request_code" />
           <ScalarProperty Name="account_number" ColumnName="account_number" />

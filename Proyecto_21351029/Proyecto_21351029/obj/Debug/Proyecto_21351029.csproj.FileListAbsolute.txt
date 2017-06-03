@@ -74,3 +74,4 @@ C:\Users\Edwin\Documents\Visual Studio 2017\Projects\ProyectoPIV\Proyecto_213510
 C:\Users\Edwin\Documents\Visual Studio 2017\Projects\ProyectoPIV\Proyecto_21351029\Proyecto_21351029\bin\Microsoft.AI.Web.xml
 C:\Users\Edwin\Documents\Visual Studio 2017\Projects\ProyectoPIV\Proyecto_21351029\Proyecto_21351029\obj\Debug\Proyecto_21351029.dll
 C:\Users\Edwin\Documents\Visual Studio 2017\Projects\ProyectoPIV\Proyecto_21351029\Proyecto_21351029\obj\Debug\Proyecto_21351029.pdb
+C:\Users\Edwin\Documents\Visual Studio 2017\Projects\ProyectoPIV\Proyecto_21351029\Proyecto_21351029\obj\Debug\Proyecto_21351029.csprojResolveAssemblyReference.cache

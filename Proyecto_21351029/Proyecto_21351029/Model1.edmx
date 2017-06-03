@@ -24,6 +24,7 @@
           <Property Name="status" Type="text" Nullable="false" />
           <Property Name="class_code" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="request_time" Type="time" Precision="7" />
+          <Property Name="hour" Type="date" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'Proyecto.dbo.Subcriptions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -95,6 +96,7 @@ warning 6002: The table/view 'Proyecto.dbo.Subcriptions' does not have a primary
           <Property Name="status" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="class_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="request_time" Type="Time" Precision="7" />
+          <Property Name="hour" Type="DateTime" Precision="0" />
         </EntityType>
         <EntityType Name="Tutorial">
           <Key>
@@ -153,6 +155,7 @@ warning 6002: The table/view 'Proyecto.dbo.Subcriptions' does not have a primary
           <EntitySetMapping Name="Requests">
             <EntityTypeMapping TypeName="ProyectoModel.Request">
               <MappingFragment StoreEntitySet="Requests">
+                <ScalarProperty Name="hour" ColumnName="hour" />
                 <ScalarProperty Name="request_time" ColumnName="request_time" />
                 <ScalarProperty Name="request_code" ColumnName="request_code" />
                 <ScalarProperty Name="account_number" ColumnName="account_number" />

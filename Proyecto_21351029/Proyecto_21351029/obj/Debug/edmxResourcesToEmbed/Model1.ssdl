@@ -19,6 +19,7 @@
     <Property Name="status" Type="text" Nullable="false" />
     <Property Name="class_code" Type="varchar" MaxLength="50" Nullable="false" />
     <Property Name="request_time" Type="time" Precision="7" />
+    <Property Name="hour" Type="date" />
   </EntityType>
   <!--Errors Found During Generation:
 warning 6002: The table/view 'Proyecto.dbo.Subcriptions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
