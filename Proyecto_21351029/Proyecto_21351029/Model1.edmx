@@ -21,90 +21,48 @@
           <Property Name="account_number" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="request_date" Type="date" Nullable="false" />
           <Property Name="date_requested" Type="date" Nullable="false" />
-          <Property Name="status" Type="text" Nullable="false" />
+          <Property Name="status" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="class_code" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="request_time" Type="time" Precision="7" />
           <Property Name="hour" Type="date" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'Proyecto.dbo.Subcriptions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Subcriptions">
           <Key>
             <PropertyRef Name="subcription_code" />
-            <PropertyRef Name="account_number" />
-            <PropertyRef Name="tutorial_code" />
           </Key>
           <Property Name="subcription_code" Type="varchar" MaxLength="9" Nullable="false" />
           <Property Name="account_number" Type="varchar" MaxLength="9" Nullable="false" />
           <Property Name="tutorial_code" Type="varchar" MaxLength="9" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'Proyecto.dbo.Tutorials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Tutorials">
           <Key>
             <PropertyRef Name="tutorial_code" />
-            
-            
-            
-            
           </Key>
-          <Property Name="tutorial_code" Type="text" Nullable="false" />
-          <Property Name="tutor_code" Type="text" Nullable="false" />
-          <Property Name="class_code" Type="text" Nullable="false" />
+          <Property Name="tutorial_code" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tutor_code" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="class_code" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="tutorial_date" Type="date" Nullable="false" />
           <Property Name="tutorial_time" Type="time" Precision="7" Nullable="false" />
           <Property Name="student_amount" Type="int" />
           <Property Name="hour" Type="date" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'Proyecto.dbo.Users' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="account_number" />
-            
-            
-            
-            
-            
           </Key>
-          <Property Name="account_number" Type="text" Nullable="false" />
-          <Property Name="complete_name" Type="text" Nullable="false" />
-          <Property Name="password" Type="text" Nullable="false" />
-          <Property Name="email" Type="text" Nullable="false" />
-          <Property Name="phone_number" Type="text" Nullable="false" />
-          <Property Name="role" Type="text" Nullable="false" />
+          <Property Name="account_number" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="complete_name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="phone_number" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="role" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityContainer Name="ProyectoModelStoreContainer">
           <EntitySet Name="Classes" EntityType="Self.Classes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Requests" EntityType="Self.Requests" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Subcriptions" EntityType="Self.Subcriptions" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [Subcriptions].[subcription_code] AS [subcription_code], 
-    [Subcriptions].[account_number] AS [account_number], 
-    [Subcriptions].[tutorial_code] AS [tutorial_code]
-    FROM [dbo].[Subcriptions] AS [Subcriptions]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="Tutorials" EntityType="Self.Tutorials" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [Tutorials].[tutorial_code] AS [tutorial_code], 
-    [Tutorials].[tutor_code] AS [tutor_code], 
-    [Tutorials].[class_code] AS [class_code], 
-    [Tutorials].[tutorial_date] AS [tutorial_date], 
-    [Tutorials].[tutorial_time] AS [tutorial_time], 
-    [Tutorials].[student_amount] AS [student_amount], 
-    [Tutorials].[hour] AS [hour]
-    FROM [dbo].[Tutorials] AS [Tutorials]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="Users" EntityType="Self.Users" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [Users].[account_number] AS [account_number], 
-    [Users].[complete_name] AS [complete_name], 
-    [Users].[password] AS [password], 
-    [Users].[email] AS [email], 
-    [Users].[phone_number] AS [phone_number], 
-    [Users].[role] AS [role]
-    FROM [dbo].[Users] AS [Users]</DefiningQuery>
-          </EntitySet>
+          <EntitySet Name="Subcriptions" EntityType="Self.Subcriptions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tutorials" EntityType="Self.Tutorials" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -126,7 +84,7 @@ warning 6002: The table/view 'Proyecto.dbo.Users' does not have a primary key de
           <Property Name="account_number" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="request_date" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="date_requested" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="status" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="class_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="request_time" Type="Time" Precision="7" />
           <Property Name="hour" Type="DateTime" Precision="0" />
@@ -135,9 +93,9 @@ warning 6002: The table/view 'Proyecto.dbo.Users' does not have a primary key de
           <Key>
             <PropertyRef Name="tutorial_code" />
           </Key>
-          <Property Name="tutorial_code" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="tutor_code" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="class_code" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="tutorial_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="tutor_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="class_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="tutorial_date" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="tutorial_time" Type="Time" Nullable="false" Precision="7" />
           <Property Name="student_amount" Type="Int32" />
@@ -147,12 +105,12 @@ warning 6002: The table/view 'Proyecto.dbo.Users' does not have a primary key de
           <Key>
             <PropertyRef Name="account_number" />
           </Key>
-          <Property Name="account_number" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="complete_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="password" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="email" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="phone_number" Type="String" Nullable="false" MaxLength="Max" Unicode="false" FixedLength="false" />
-          <Property Name="role" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="account_number" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="complete_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="phone_number" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="role" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
         </EntityType>
         <EntityContainer Name="ProyectoEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Classes" EntityType="Self.Class" />
@@ -164,8 +122,6 @@ warning 6002: The table/view 'Proyecto.dbo.Users' does not have a primary key de
         <EntityType Name="Subcription">
           <Key>
             <PropertyRef Name="subcription_code" />
-            <PropertyRef Name="account_number" />
-            <PropertyRef Name="tutorial_code" />
           </Key>
           <Property Name="subcription_code" Type="String" Nullable="false" MaxLength="9" FixedLength="false" Unicode="false" />
           <Property Name="account_number" Type="String" Nullable="false" MaxLength="9" FixedLength="false" Unicode="false" />

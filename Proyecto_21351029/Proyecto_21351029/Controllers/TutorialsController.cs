@@ -236,7 +236,6 @@ namespace Proyecto_21351029.Controllers
 
         public ActionResult Subscribe(string id)
         {
-            //agarrar el numero de cuenta
             Subcription Subscription = (from Subs in db.Subcriptions
                                         where Subs.account_number == "21351029" && Subs.tutorial_code == id
                                         select Subs).FirstOrDefault();
@@ -275,6 +274,7 @@ namespace Proyecto_21351029.Controllers
                                  + User.complete_name + "," + x.student_amount);
             }
             File.Flush();
+            File.Close();
             return RedirectToAction("Index");
         }
 

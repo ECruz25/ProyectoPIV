@@ -16,7 +16,7 @@
     <Property Name="account_number" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="request_date" Type="DateTime" Nullable="false" Precision="0" />
     <Property Name="date_requested" Type="DateTime" Nullable="false" Precision="0" />
-    <Property Name="status" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="class_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="request_time" Type="Time" Precision="7" />
     <Property Name="hour" Type="DateTime" Precision="0" />
@@ -25,9 +25,9 @@
     <Key>
       <PropertyRef Name="tutorial_code" />
     </Key>
-    <Property Name="tutorial_code" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="tutor_code" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="class_code" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="tutorial_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="tutor_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="class_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="tutorial_date" Type="DateTime" Nullable="false" Precision="0" />
     <Property Name="tutorial_time" Type="Time" Nullable="false" Precision="7" />
     <Property Name="student_amount" Type="Int32" />
@@ -37,12 +37,12 @@
     <Key>
       <PropertyRef Name="account_number" />
     </Key>
-    <Property Name="account_number" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="complete_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="password" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="email" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="phone_number" Type="String" Nullable="false" MaxLength="Max" Unicode="false" FixedLength="false" />
-    <Property Name="role" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="account_number" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="complete_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="phone_number" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+    <Property Name="role" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
   </EntityType>
   <EntityContainer Name="ProyectoEntities" annotation:LazyLoadingEnabled="true">
     <EntitySet Name="Classes" EntityType="Self.Class" />
@@ -54,8 +54,6 @@
   <EntityType Name="Subcription">
     <Key>
       <PropertyRef Name="subcription_code" />
-      <PropertyRef Name="account_number" />
-      <PropertyRef Name="tutorial_code" />
     </Key>
     <Property Name="subcription_code" Type="String" Nullable="false" MaxLength="9" FixedLength="false" Unicode="false" />
     <Property Name="account_number" Type="String" Nullable="false" MaxLength="9" FixedLength="false" Unicode="false" />
