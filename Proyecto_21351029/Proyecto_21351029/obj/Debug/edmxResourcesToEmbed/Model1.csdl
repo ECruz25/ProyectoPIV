@@ -47,5 +47,16 @@
     <EntitySet Name="Requests" EntityType="Self.Request" />
     <EntitySet Name="Tutorials" EntityType="Self.Tutorial" />
     <EntitySet Name="Users" EntityType="Self.User" />
+    <EntitySet Name="Subcriptions" EntityType="ProyectoModel.Subcription" />
   </EntityContainer>
+  <EntityType Name="Subcription">
+    <Key>
+      <PropertyRef Name="subcription_code" />
+      <PropertyRef Name="account_number" />
+      <PropertyRef Name="tutorial_code" />
+    </Key>
+    <Property Name="subcription_code" Type="String" Nullable="false" MaxLength="9" FixedLength="false" Unicode="false" />
+    <Property Name="account_number" Type="String" Nullable="false" MaxLength="9" FixedLength="false" Unicode="false" />
+    <Property Name="tutorial_code" Type="String" Nullable="false" MaxLength="9" FixedLength="false" Unicode="false" />
+  </EntityType>
 </Schema>

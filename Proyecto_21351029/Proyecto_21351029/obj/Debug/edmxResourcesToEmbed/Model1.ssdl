@@ -20,6 +20,18 @@
     <Property Name="class_code" Type="varchar" MaxLength="50" Nullable="false" />
     <Property Name="request_time" Type="time" Precision="7" />
   </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Proyecto.dbo.Subcriptions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="Subcriptions">
+    <Key>
+      <PropertyRef Name="subcription_code" />
+      <PropertyRef Name="account_number" />
+      <PropertyRef Name="tutorial_code" />
+    </Key>
+    <Property Name="subcription_code" Type="varchar" MaxLength="9" Nullable="false" />
+    <Property Name="account_number" Type="varchar" MaxLength="9" Nullable="false" />
+    <Property Name="tutorial_code" Type="varchar" MaxLength="9" Nullable="false" />
+  </EntityType>
   <EntityType Name="Tutorials">
     <Key>
       <PropertyRef Name="tutorial_code" />
@@ -47,5 +59,12 @@
     <EntitySet Name="Requests" EntityType="Self.Requests" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Tutorials" EntityType="Self.Tutorials" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Subcriptions" EntityType="Self.Subcriptions" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [Subcriptions].[subcription_code] AS [subcription_code], 
+    [Subcriptions].[account_number] AS [account_number], 
+    [Subcriptions].[tutorial_code] AS [tutorial_code]
+    FROM [dbo].[Subcriptions] AS [Subcriptions]</DefiningQuery>
+    </EntitySet>
   </EntityContainer>
 </Schema>

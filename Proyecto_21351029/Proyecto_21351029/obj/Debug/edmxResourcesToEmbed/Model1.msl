@@ -47,5 +47,14 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Subcriptions">
+      <EntityTypeMapping TypeName="ProyectoModel.Subcription">
+        <MappingFragment StoreEntitySet="Subcriptions">
+          <ScalarProperty Name="tutorial_code" ColumnName="tutorial_code" />
+          <ScalarProperty Name="account_number" ColumnName="account_number" />
+          <ScalarProperty Name="subcription_code" ColumnName="subcription_code" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

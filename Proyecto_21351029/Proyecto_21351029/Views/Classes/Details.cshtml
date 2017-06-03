@@ -1,0 +1,35 @@
+﻿@model Proyecto_21351029.Class
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Class</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.tutor_code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tutor_code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.class_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.class_name)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.class_code }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

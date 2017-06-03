@@ -35,24 +35,49 @@ namespace Proyecto_21351029.Controllers
             }
             return View(request);
         }
-
-
-
+        
         // GET: Requests/Create
         public ActionResult Create()
         {
+            var Classes = from TempClasses in db.Classes
+                           select TempClasses;
+            List<SelectListItem> ClassCodes = new List<SelectListItem>();
+
+            foreach(var x in Classes)
+            {
+                ClassCodes.Add(new SelectListItem
+                {
+                    Text = x.class_name,
+                    Value = x.class_code.ToString()
+                });
+            }
+            
+            RequestViewModel RequestView = new RequestViewModel()
+            {
+                class_codes = ClassCodes,
+
+            };
+
+            ViewBag.ClassCodes = ClassCodes;
             return View();
         }
-        /*
+        
         // POST: Requests/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "request_code,account_number,request_date,date_requested,status,class_code")] Request request)
+        public ActionResult Create([Bind(Include = "request_date,class_code")] Request request)
         {
             if (ModelState.IsValid)
             {
+                TimeSpan duration = new TimeSpan(0, 12, 23, 3);
+
+                request.request_code = CreateCode(db.Requests.Count());
+                request.date_requested = DateTime.Today;
+                request.status = "Pending";
+                request.account_number = "21351029";
+                request.request_time = duration;
+
                 db.Requests.Add(request);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -60,7 +85,7 @@ namespace Proyecto_21351029.Controllers
 
             return View(request);
         }
-        */
+        
         [HttpPost]
         public ActionResult CreateRequest([Bind(Include = "request_date,class_code")] Request Request)
         {

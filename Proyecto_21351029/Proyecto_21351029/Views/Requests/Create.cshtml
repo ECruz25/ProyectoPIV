@@ -4,11 +4,15 @@
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<style>
+    .MakeWide {
+        width: 300px;
+    }
+</style>
 <h2>Create</h2>
 
 
-@using (Html.BeginForm("CreateRequest", "Requests", FormMethod.Post)) 
+@using (Html.BeginForm())
 {
     <div class="form-horizontal">
         <h4>Request</h4>
@@ -26,18 +30,10 @@
         <div class="form-group">
             @Html.LabelFor(model => model.class_code, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.class_code, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DropDownListFor(model => model.class_code, (IEnumerable<SelectListItem>)ViewBag.ClassCodes, "Select Class", new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.class_code, "", new { @class = "text-danger" })
             </div>
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.class_code, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.ValidationMessageFor(model => model.class_code, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-default" />

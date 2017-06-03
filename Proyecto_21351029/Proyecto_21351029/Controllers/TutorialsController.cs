@@ -162,12 +162,21 @@ namespace Proyecto_21351029.Controllers
 
         public ActionResult Subscribe(string id)
         {
-            Tutorial Tutorial = (from Tutorials in db.Tutorials
-                                 where Tutorials.tutorial_code == id
-                                 select Tutorials).FirstOrDefault();
+            //agarrar el numero de cuenta
+            Subcription Subscription = (from Subs in db.Subcriptions
+                                        where Subs.account_number == "21351029" && Subs.tutorial_code == id
+                                        select Subs).FirstOrDefault();
 
-            Tutorial.student_amount = Tutorial.student_amount + 1;
-            db.SaveChanges();
+            if(Subscription == null)
+            {
+                Tutorial Tutorial = (from Tutorials in db.Tutorials
+                                     where Tutorials.tutorial_code == id
+                                     select Tutorials).FirstOrDefault();
+
+                Tutorial.student_amount = Tutorial.student_amount + 1;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
             return RedirectToAction("Index");
         }
 
@@ -177,13 +186,28 @@ namespace Proyecto_21351029.Controllers
                             select Tutorial;
 
             StreamWriter File = new StreamWriter("C:\\Users\\Edwin\\Documents\\SaveHere\\Text.csv");
-            File.WriteLine("Class Code, Amount");
+            File.WriteLine("Tutorial Code, Amount");
             foreach (var x in Tutorials)
             {
                 File.WriteLine(x.tutorial_code + ", " + x.student_amount);
             }
             File.Flush();
             return RedirectToAction("Index");
+        }
+
+        public ActionResult ExportAmountOfTutorialsByDate(DateTime AfterDate)
+        {
+            var Tutorials = from Tutorial in db.Tutorials
+                            where Tutorial.tutorial_date >= AfterDate
+                            select Tutorial;
+
+            StreamWriter File = new StreamWriter("C:\\Users\\Edwin\\Documents\\SaveHere\\Text.csv");
+            File.WriteLine("Class Code, ");
+            foreach (var x in Tutorials)
+            {
+                File.WriteLine(x.tutorial_code);
+            }
+            return View("Index");
         }
     }
 }
