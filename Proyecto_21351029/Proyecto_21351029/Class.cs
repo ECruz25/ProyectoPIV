@@ -14,6 +14,7 @@ namespace Proyecto_21351029
     
     public partial class Class
     {
+        
         public string class_code { get; set; }
         public string tutor_code { get; set; }
         public string class_name { get; set; }

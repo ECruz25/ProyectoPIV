@@ -19,6 +19,20 @@ namespace Proyecto_21351029.Controllers
         // GET: Tutorials
         public ActionResult Index()
         {
+            var Classes = from TempClasses in db.Classes
+                          select TempClasses;
+            List<SelectListItem> ClassCodes = new List<SelectListItem>();
+
+            foreach (var x in Classes)
+            {
+                ClassCodes.Add(new SelectListItem
+                {
+                    Text = x.class_name,
+                    Value = x.class_code.ToString()
+                });
+            }
+
+            ViewBag.ClassCodes = ClassCodes;
             return View(db.Tutorials.ToList());
         }
 
@@ -28,7 +42,7 @@ namespace Proyecto_21351029.Controllers
         }
 
         // GET: Tutorials/Details/5
-        public ActionResult Details(string id)
+        public ActionResult Details(int id)
         {
             if (id == null)
             {
@@ -89,14 +103,26 @@ namespace Proyecto_21351029.Controllers
         {
             if (ModelState.IsValid)
             {
+                Class Class = (from TempClass in db.Classes
+                               where TempClass.class_code == tutorial.class_code
+                               select TempClass).FirstOrDefault();
+
+                User User = (from TempUser in db.Users
+                             where TempUser.account_number == tutorial.tutor_code
+                             select TempUser).FirstOrDefault();
+
                 DateTime Date = new DateTime(Convert.ToDateTime(tutorial.hour).Year, Convert.ToDateTime(tutorial.hour).Month, Convert.ToDateTime(tutorial.hour).Day);
-                tutorial.tutorial_code = CreateCode(db.Tutorials.Count());
+                tutorial.id = CreateCode(db.Tutorials.Count());
                 tutorial.student_amount = 0;
-                tutorial.tutorial_time = Convert.ToDateTime(tutorial.hour) - Date;
+                tutorial.start_date = Convert.ToDateTime(tutorial.hour);
                 tutorial.hour = tutorial.tutorial_date + (Convert.ToDateTime(tutorial.hour) - Date);
                 db.Tutorials.Add(tutorial);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                tutorial.end_date = Convert.ToDateTime(tutorial.hour);
+                tutorial.text = tutorial.id + "," + tutorial.tutor_code;
+                tutorial.class_name = Class.class_name;
+                tutorial.tutor_name = User.complete_name;
+                db.SaveChanges();   
+                return RedirectToAction("Index");   
             }
             else
             {
@@ -137,7 +163,7 @@ namespace Proyecto_21351029.Controllers
         }
 
         // GET: Tutorials/Edit/5
-        public ActionResult Edit(string id)
+        public ActionResult Edit(int id)
         {
             if (id == null)
             {
@@ -168,7 +194,7 @@ namespace Proyecto_21351029.Controllers
         }
 
         // GET: Tutorials/Delete/5
-        public ActionResult Delete(string id)
+        public ActionResult Delete(int id)
         {
             if (id == null)
             {
@@ -185,7 +211,7 @@ namespace Proyecto_21351029.Controllers
         // POST: Tutorials/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(string id)
+        public ActionResult DeleteConfirmed(int id)
         {
             Tutorial tutorial = db.Tutorials.Find(id);
             db.Tutorials.Remove(tutorial);
@@ -207,22 +233,22 @@ namespace Proyecto_21351029.Controllers
             return RedirectToAction("Create", "Requests");
         }
 
-        protected string CreateCode(int Amount)
+        protected int CreateCode(int Amount)
         {
-            if(Found("T-" + Amount))
+            if(Found(Amount))
             {
                 return CreateCode(Amount + 1);
             }
             else
             {
-                return "T-" + Amount;
+                return Amount;
             }
         }
 
-        protected Boolean Found(string Code)
+        protected Boolean Found(int Code)
         {
             Tutorial Tutorial = (from TempTutorial in db.Tutorials
-                                 where TempTutorial.class_code == Code
+                                 where TempTutorial.id == Code
                                  select TempTutorial).FirstOrDefault();
             if(Tutorial != null)
             {
@@ -234,16 +260,16 @@ namespace Proyecto_21351029.Controllers
             }
         }
 
-        public ActionResult Subscribe(string id)
+        public ActionResult Subscribe(int id)
         {
             Subcription Subscription = (from Subs in db.Subcriptions
-                                        where Subs.account_number == "21351029" && Subs.tutorial_code == id
+                                        where Subs.account_number == "21351029" && Subs.tutorial_code == id.ToString()
                                         select Subs).FirstOrDefault();
 
             if(Subscription == null)
             {
                 Tutorial Tutorial = (from Tutorials in db.Tutorials
-                                     where Tutorials.tutorial_code == id
+                                     where Tutorials.id == id
                                      select Tutorials).FirstOrDefault();
 
                 Tutorial.student_amount = Tutorial.student_amount + 1;
@@ -258,7 +284,7 @@ namespace Proyecto_21351029.Controllers
             var Tutorials = from Tutorial in db.Tutorials
                             select Tutorial;
 
-            StreamWriter File = new StreamWriter("C:\\Users\\Edwin\\Documents\\SaveHere\\Text.csv");
+            StreamWriter File = new StreamWriter("Downloads\\Text.csv");
             File.WriteLine("Tutorial Code, Amount, Date");
             foreach (var x in Tutorials)
             {
@@ -270,7 +296,7 @@ namespace Proyecto_21351029.Controllers
                                where TempClass.class_code == x.class_code
                                select TempClass).FirstOrDefault();
 
-                File.WriteLine(x.tutorial_code + "," + Class.class_name + "," + x.tutorial_date + "," + x.tutorial_time + ","
+                File.WriteLine(x.id + "," + Class.class_name + "," + x.tutorial_date + "," + x.start_date + ","
                                  + User.complete_name + "," + x.student_amount);
             }
             File.Flush();
@@ -288,7 +314,7 @@ namespace Proyecto_21351029.Controllers
             File.WriteLine("Tutorial Code, Amount");
             foreach (var x in Tutorials)
             {
-                File.WriteLine(x.tutorial_code + ", " + x.student_amount);
+                File.WriteLine(x.id + ", " + x.student_amount);
             }
             File.Flush();
             return View("Export");

@@ -36,15 +36,19 @@
         </EntityType>
         <EntityType Name="Tutorials">
           <Key>
-            <PropertyRef Name="tutorial_code" />
+            <PropertyRef Name="id" />
           </Key>
-          <Property Name="tutorial_code" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="tutor_code" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tutor_name" Type="varchar" MaxLength="50" />
           <Property Name="class_code" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="class_name" Type="varchar" MaxLength="50" />
           <Property Name="tutorial_date" Type="date" Nullable="false" />
-          <Property Name="tutorial_time" Type="time" Precision="7" Nullable="false" />
-          <Property Name="student_amount" Type="int" />
-          <Property Name="hour" Type="date" />
+          <Property Name="start_date" Type="datetime" Nullable="false" />
+          <Property Name="student_amount" Type="int" Nullable="false" />
+          <Property Name="hour" Type="date" Nullable="false" />
+          <Property Name="end_date" Type="datetime" Nullable="false" />
+          <Property Name="text" Type="nvarchar" MaxLength="256" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -91,15 +95,19 @@
         </EntityType>
         <EntityType Name="Tutorial">
           <Key>
-            <PropertyRef Name="tutorial_code" />
+            <PropertyRef Name="id" />
           </Key>
-          <Property Name="tutorial_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="tutor_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="class_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="tutorial_date" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="tutorial_time" Type="Time" Nullable="false" Precision="7" />
-          <Property Name="student_amount" Type="Int32" />
-          <Property Name="hour" Type="DateTime" Precision="0" />
+          <Property Name="student_amount" Type="Int32" Nullable="false" />
+          <Property Name="hour" Type="DateTime" Precision="0" Nullable="false" />
+          <Property Name="start_date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="end_date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="text" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="tutor_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="class_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -159,13 +167,17 @@
           <EntitySetMapping Name="Tutorials">
             <EntityTypeMapping TypeName="ProyectoModel.Tutorial">
               <MappingFragment StoreEntitySet="Tutorials">
+                <ScalarProperty Name="class_name" ColumnName="class_name" />
+                <ScalarProperty Name="tutor_name" ColumnName="tutor_name" />
+                <ScalarProperty Name="text" ColumnName="text" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="end_date" ColumnName="end_date" />
+                <ScalarProperty Name="start_date" ColumnName="start_date" />
                 <ScalarProperty Name="hour" ColumnName="hour" />
                 <ScalarProperty Name="student_amount" ColumnName="student_amount" />
-                <ScalarProperty Name="tutorial_code" ColumnName="tutorial_code" />
                 <ScalarProperty Name="tutor_code" ColumnName="tutor_code" />
                 <ScalarProperty Name="class_code" ColumnName="class_code" />
                 <ScalarProperty Name="tutorial_date" ColumnName="tutorial_date" />
-                <ScalarProperty Name="tutorial_time" ColumnName="tutorial_time" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

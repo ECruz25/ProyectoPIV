@@ -15,30 +15,35 @@ namespace Proyecto_21351029
 
     public partial class Request
     {
+        
+        [Display(Name = "Codigo de solicitud")]
         public string request_code { get; set; }
-
+        
+        [Display(Name = "Numero de cuenta")]
         public string account_number { get; set; }
 
         [Required]
-        [Display(Name = "Fecha")]
+        [Display(Name = "Fecha solicitada")]
         [DataType(DataType.Date)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public System.DateTime request_date { get; set; }
-
+        
+        [Display(Name = "Fecha de solicitud")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public System.DateTime date_requested { get; set; }
-
+        
+        [Display(Name = "Estado de solicitud")]
         public string status { get; set; }
-
-        [Required]
-        [Display(Name = "Clase")]
+        
+        [Display(Name = "Codigo de clase")]
         public string class_code { get; set; }
-
-        [Required]
-        [Display(Name = "Hora")]
+        
+        [Display(Name = "Hora solicitada")]
+        [DataType(DataType.Time)]
         public Nullable<System.TimeSpan> request_time { get; set; }
-
-        [Required]
-        [Display(Name = "Hora2")]
+        
+        [Display(Name = "Hora")]
         [DataType(DataType.Time)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm}")]
         public Nullable<System.DateTime> hour { get; set; }

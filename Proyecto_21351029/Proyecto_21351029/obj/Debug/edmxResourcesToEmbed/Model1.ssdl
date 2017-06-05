@@ -31,15 +31,19 @@
   </EntityType>
   <EntityType Name="Tutorials">
     <Key>
-      <PropertyRef Name="tutorial_code" />
+      <PropertyRef Name="id" />
     </Key>
-    <Property Name="tutorial_code" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="tutor_code" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="tutor_name" Type="varchar" MaxLength="50" />
     <Property Name="class_code" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="class_name" Type="varchar" MaxLength="50" />
     <Property Name="tutorial_date" Type="date" Nullable="false" />
-    <Property Name="tutorial_time" Type="time" Precision="7" Nullable="false" />
-    <Property Name="student_amount" Type="int" />
-    <Property Name="hour" Type="date" />
+    <Property Name="start_date" Type="datetime" Nullable="false" />
+    <Property Name="student_amount" Type="int" Nullable="false" />
+    <Property Name="hour" Type="date" Nullable="false" />
+    <Property Name="end_date" Type="datetime" Nullable="false" />
+    <Property Name="text" Type="nvarchar" MaxLength="256" />
   </EntityType>
   <EntityType Name="Users">
     <Key>

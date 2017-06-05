@@ -109,59 +109,24 @@ namespace Proyecto_21351029.Controllers
             }
         }
         
-        // GET: Requests/Edit/5
-        public ActionResult Edit(string id)
+        public ActionResult Approve(string id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Request request = db.Requests.Find(id);
-            if (request == null)
-            {
-                return HttpNotFound();
-            }
-            return View(request);
-        }
+            Request Request = (from TempRequest in db.Requests
+                               where TempRequest.request_code == id
+                               select TempRequest).FirstOrDefault();
 
-        // POST: Requests/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "request_code,account_number,request_date,date_requested,status,class_code")] Request request)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(request).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(request);
+            Request.status = "Approved";
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
-
-        // GET: Requests/Delete/5
-        public ActionResult Delete(string id)
+        
+        public ActionResult Reject(string id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Request request = db.Requests.Find(id);
-            if (request == null)
-            {
-                return HttpNotFound();
-            }
-            return View(request);
-        }
+            Request Request = (from TempRequest in db.Requests
+                               where TempRequest.request_code == id
+                               select TempRequest).FirstOrDefault();
 
-        // POST: Requests/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(string id)
-        {
-            Request request = db.Requests.Find(id);
-            db.Requests.Remove(request);
+            Request.status = "Rejected";
             db.SaveChanges();
             return RedirectToAction("Index");
         }

@@ -19,7 +19,14 @@ namespace Proyecto_21351029.Controllers
         {
             //Being initialized in that way, scheduler will use CalendarController.Data as a the datasource and CalendarController.Save to process changes
             var scheduler = new DHXScheduler(this);
-
+            /*var cl = new LightboxSelect("type", "Type");
+            select.AddOptions(new List<object>{
+                new { key = 1, label = "Job" },
+                new { key = 2, label = "Family" },
+                new { key = 3, label = "Other" }
+            });
+            scheduler.Lightbox.Add(select);
+            scheduler.Lightbox.AddDefaults();*/
             /*
              * It's possible to use different actions of the current controller
              *      var scheduler = new DHXScheduler(this);     
@@ -36,9 +43,6 @@ namespace Proyecto_21351029.Controllers
              * The default codebase folder is ~/Scripts/dhtmlxScheduler. It can be overriden:
              *      scheduler.Codebase = Url.Content("~/customCodebaseFolder");
              */
-            
- 
-            scheduler.InitialDate = new DateTime(2012, 09, 03);
 
             scheduler.LoadData = true;
             scheduler.EnableDataprocessor = true;
@@ -48,59 +52,42 @@ namespace Proyecto_21351029.Controllers
 
         public ContentResult Data()
         {
-            var data = new SchedulerAjaxData(
-                    new List<CalendarEvent>{ 
-                        new CalendarEvent{
-                            id = 1, 
-                            text = "Sample Event", 
-                            start_date = new DateTime(2012, 09, 03, 6, 00, 00), 
-                            end_date = new DateTime(2012, 09, 03, 8, 00, 00)
-                        },
-                        new CalendarEvent{
-                            id = 2, 
-                            text = "New Event", 
-                            start_date = new DateTime(2012, 09, 05, 9, 00, 00), 
-                            end_date = new DateTime(2012, 09, 05, 12, 00, 00)
-                        },
-                        new CalendarEvent{
-                            id = 3, 
-                            text = "Multiday Event", 
-                            start_date = new DateTime(2012, 09, 03, 10, 00, 00), 
-                            end_date = new DateTime(2012, 09, 10, 12, 00, 00)
-                        }
-                    }
-                );
+            var data = new SchedulerAjaxData(new ProyectoEntities().Tutorials);
+                    
             return (ContentResult)data;
         }
 
         public ContentResult Save(int? id, FormCollection actionValues)
         {
             var action = new DataAction(actionValues);
-            
-            try
-            {
-                var changedEvent = (CalendarEvent)DHXEventsHelper.Bind(typeof(CalendarEvent), actionValues);
-
-     
-
+            var changedEvent = (Tutorial)DHXEventsHelper.Bind(typeof(Tutorial), actionValues);
+            changedEvent.class_code = "1";
+            changedEvent.tutor_code = "0";
+            var data = new ProyectoEntities();
+            /*try
+            {*/
                 switch (action.Type)
                 {
                     case DataActionTypes.Insert:
-                        //do insert
-                        //action.TargetId = changedEvent.id;//assign postoperational id
+                        data.Tutorials.Add(changedEvent);
                         break;
                     case DataActionTypes.Delete:
-                        //do delete
+                        changedEvent = data.Tutorials.FirstOrDefault(ev => ev.id == action.SourceId);
+                        data.Tutorials.Remove(changedEvent);
                         break;
                     default:// "update"                          
-                        //do update
-                        break;
+                        var EventToUpdate = data.Tutorials.SingleOrDefault(ev => ev.id == action.SourceId);
+                        DHXEventsHelper.Update(EventToUpdate, changedEvent, new List<string>(){"id"});
+                    //return RedirectToAction("Edit", "Tutorials", new int { "id" = changedEvent.id });
+                    break;
                 }
-            }
+                data.SaveChanges();
+                action.TargetId =   changedEvent.id;
+            /*}
             catch
             {
                 action.Type = DataActionTypes.Error;
-            }
+            }*/
             return (ContentResult)new AjaxSaveResponse(action);
         }
     }

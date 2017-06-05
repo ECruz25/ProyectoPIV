@@ -38,6 +38,24 @@ namespace Proyecto_21351029.Controllers
         // GET: Classes/Create
         public ActionResult Create()
         {
+            List<SelectListItem> Teachers = new List<SelectListItem>();
+
+            var Users = from TempUser in db.Users
+                        select TempUser;
+
+            foreach (var Teacher in Users)
+            {
+                if (Teacher.role == "Teacher")
+                {
+                    Teachers.Add(new SelectListItem
+                    {
+                        Text = Teacher.complete_name,
+                        Value = Teacher.account_number
+                    });
+                }
+            }
+
+            ViewBag.Teachers = Teachers;
             return View();
         }
 
@@ -50,6 +68,7 @@ namespace Proyecto_21351029.Controllers
         {
             if (ModelState.IsValid)
             {
+                @class.class_code = CreateCode(db.Classes.Count());
                 db.Classes.Add(@class);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -122,6 +141,33 @@ namespace Proyecto_21351029.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        protected string CreateCode(int Amount)
+        {
+            if (Found("C-" + Amount))
+            {
+                return CreateCode(Amount + 1);
+            }
+            else
+            {
+                return "C-" + Amount;
+            }
+        }
+
+        protected Boolean Found(string Code)
+        {
+            Class Class = (from TempClass in db.Classes
+                                 where TempClass.class_code == Code
+                                 select TempClass).FirstOrDefault();
+            if (Class != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

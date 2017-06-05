@@ -1,0 +1,76 @@
+﻿@model IEnumerable<Proyecto_21351029.Tutorial>
+
+@{
+    ViewBag.Title = "IndexByResult";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>IndexByResult</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.tutor_code)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.class_code)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.tutorial_date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.student_amount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.hour)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.start_date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.end_date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.text)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.tutor_code)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.class_code)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.tutorial_date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.student_amount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.hour)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.start_date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.end_date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.text)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.id })
+        </td>
+    </tr>
+}
+
+</table>

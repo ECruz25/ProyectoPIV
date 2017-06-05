@@ -23,15 +23,19 @@
   </EntityType>
   <EntityType Name="Tutorial">
     <Key>
-      <PropertyRef Name="tutorial_code" />
+      <PropertyRef Name="id" />
     </Key>
-    <Property Name="tutorial_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="tutor_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="class_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="tutorial_date" Type="DateTime" Nullable="false" Precision="0" />
-    <Property Name="tutorial_time" Type="Time" Nullable="false" Precision="7" />
-    <Property Name="student_amount" Type="Int32" />
-    <Property Name="hour" Type="DateTime" Precision="0" />
+    <Property Name="student_amount" Type="Int32" Nullable="false" />
+    <Property Name="hour" Type="DateTime" Precision="0" Nullable="false" />
+    <Property Name="start_date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="end_date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="text" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+    <Property Name="tutor_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="class_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
   </EntityType>
   <EntityType Name="User">
     <Key>

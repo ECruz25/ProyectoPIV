@@ -11,14 +11,32 @@ namespace Proyecto_21351029
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class User
     {
+        [Required]
+        [Display(Name = "Numero de cuenta")]
         public string account_number { get; set; }
+
+        [Required]
+        [Display(Name = "Nombre")]
         public string complete_name { get; set; }
+
+        [Required]
+        [Display(Name = "Contraseña")]
         public string password { get; set; }
+
+        [Required]
+        [Display(Name = "Correo Electronico")]
         public string email { get; set; }
+
+        [Required]
+        [Display(Name = "Numero")]
         public string phone_number { get; set; }
+
+        [Required]
+        [Display(Name = "Rol")]
         public string role { get; set; }
     }
 }

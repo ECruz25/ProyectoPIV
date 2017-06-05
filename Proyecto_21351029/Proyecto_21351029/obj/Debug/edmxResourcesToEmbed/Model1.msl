@@ -27,13 +27,17 @@
     <EntitySetMapping Name="Tutorials">
       <EntityTypeMapping TypeName="ProyectoModel.Tutorial">
         <MappingFragment StoreEntitySet="Tutorials">
+          <ScalarProperty Name="class_name" ColumnName="class_name" />
+          <ScalarProperty Name="tutor_name" ColumnName="tutor_name" />
+          <ScalarProperty Name="text" ColumnName="text" />
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="end_date" ColumnName="end_date" />
+          <ScalarProperty Name="start_date" ColumnName="start_date" />
           <ScalarProperty Name="hour" ColumnName="hour" />
           <ScalarProperty Name="student_amount" ColumnName="student_amount" />
-          <ScalarProperty Name="tutorial_code" ColumnName="tutorial_code" />
           <ScalarProperty Name="tutor_code" ColumnName="tutor_code" />
           <ScalarProperty Name="class_code" ColumnName="class_code" />
           <ScalarProperty Name="tutorial_date" ColumnName="tutorial_date" />
-          <ScalarProperty Name="tutorial_time" ColumnName="tutorial_time" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
