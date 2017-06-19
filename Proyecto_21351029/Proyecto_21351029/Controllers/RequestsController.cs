@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using Proyecto_21351029;
 using Proyecto_21351029.ViewModels;
+using System.Globalization;
 
 namespace Proyecto_21351029.Controllers
 {
@@ -62,34 +63,52 @@ namespace Proyecto_21351029.Controllers
         [HttpPost]
         public ActionResult Create([Bind(Include = "request_date,class_code,hour")] Request request)
         {
+            request.account_number = "21351029";
+            int y = 0;
+            var RequestsByUser = (from User in db.Requests
+                                  where User.account_number == request.account_number
+                                  select User);
+
+            foreach (Request x in RequestsByUser)
+            {
+                if (GetWeekNumber(x.date_requested) == GetWeekNumber(DateTime.Today))
+                {
+                    y++;
+                }
+            }
             if (ModelState.IsValid)
             {
-                TimeSpan duration = new TimeSpan(0, 12, 23, 3);
+                if(y<3)
+                {
+                    TimeSpan duration = new TimeSpan(0, 12, 23, 3);
 
-                request.request_code = CreateCode(db.Requests.Count());
-                request.date_requested = DateTime.Today;
-                request.status = "Pending";
-                request.account_number = "21351029";
-                request.request_time = request.hour - request.date_requested;
-                request.hour = request.request_date + (request.hour - request.date_requested);
+                    request.request_code = CreateCode(db.Requests.Count());
+                    request.date_requested = DateTime.Today;
+                    request.status = "Pending";
+                    request.request_time = request.hour - request.date_requested;
+                    request.hour = request.request_date + (request.hour - request.date_requested);
 
-                db.Requests.Add(request);
-                db.SaveChanges();
+                    db.Requests.Add(request);
+                    db.SaveChanges();
+                }
                 return RedirectToAction("Index");
             }
             else
             {
-                TimeSpan duration = new TimeSpan(0, 12, 23, 3);
+                if (y <= 3)
+                {
+                    TimeSpan duration = new TimeSpan(0, 12, 23, 3);
 
-                request.request_code = CreateCode(db.Requests.Count());
-                request.date_requested = DateTime.Today;
-                request.status = "Pending";
-                request.account_number = "21351029";
-                request.request_time = request.hour - request.date_requested;
-                request.hour = request.request_date + (request.hour - request.date_requested);
+                    request.request_code = CreateCode(db.Requests.Count());
+                    request.date_requested = DateTime.Today;
+                    request.status = "Pending";
+                    request.account_number = "21351029";
+                    request.request_time = request.hour - request.date_requested;
+                    request.hour = request.request_date + (request.hour - request.date_requested);
 
-                db.Requests.Add(request);
-                db.SaveChanges();
+                    db.Requests.Add(request);
+                    db.SaveChanges();
+                }
 
                 var Classes = from TempClasses in db.Classes
                               select TempClasses;
@@ -184,6 +203,16 @@ namespace Proyecto_21351029.Controllers
         public ActionResult CreateTutorial()
         {
             return RedirectToAction("Create", "Tutorials");
+        }
+
+        public int GetWeekNumber(DateTime Date)
+        {
+            CultureInfo norwCulture = CultureInfo.CreateSpecificCulture("es");
+            Calendar cal = norwCulture.Calendar;
+            int weekNo = cal.GetWeekOfYear(Date,
+                            norwCulture.DateTimeFormat.CalendarWeekRule,
+                            norwCulture.DateTimeFormat.FirstDayOfWeek);
+            return weekNo;
         }
     }
 }

@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Proyecto_21351029.Class>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<table id="classes"class="table table-bordered table-responsive table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.class_code)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.class_name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.tutor_code)
+            </th>
+            <th>
+                Opciones
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.class_code)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.class_name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.tutor_code)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { id = item.class_code }) |
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#classes").DataTable();
+        })
+    </script>
+}

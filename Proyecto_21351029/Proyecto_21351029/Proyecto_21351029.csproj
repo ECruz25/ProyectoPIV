@@ -671,6 +671,11 @@
     <Content Include="Views\Tutorials\Export.cshtml" />
     <Content Include="Views\Calendar\Index.cshtml" />
     <Content Include="Views\Tutorials\IndexByResult.cshtml" />
+    <Content Include="Views\Classes\Index - ReadOnly.cshtml" />
+    <Content Include="Views\Tutorials\Index - ReadOnly.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Users\Login.cshtml" />
+    <Content Include="Views\Users\UnableToAccess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -17,28 +17,104 @@ namespace Proyecto_21351029.Controllers
         // GET: Users
         public ActionResult Index()
         {
-            return View(db.Users.ToList());
+            User User = GetUser();
+
+            if(User != null)
+            {
+                if (User.role != "Admin")
+                {
+                    return View("UnableToAccess");
+                }
+                else
+                {
+                    return View(db.Users.ToList());
+                }
+            }
+            else
+            {
+                return RedirectToAction("Login");   
+            }
+        }
+
+        protected User GetUser()
+        {
+            return Session["User"] as User;
         }
 
         // GET: Users/Details/5
         public ActionResult Details(string id)
         {
-            if (id == null)
+            User User = GetUser();
+
+            if (User != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (User.role != "Admin")
+                {
+                    return View("UnableToAccess");
+                }
+                else
+                {
+                    if (id == null)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    }
+                    User user = db.Users.Find(id);
+                    if (user == null)
+                    {
+                        return HttpNotFound();
+                    }
+                    return View(user);
+                }
             }
-            User user = db.Users.Find(id);
-            if (user == null)
+            else
             {
-                return HttpNotFound();
+                return RedirectToAction("Login");
             }
-            return View(user);
         }
 
         // GET: Users/Create
         public ActionResult Create()
         {
-            return View();
+            User User = GetUser();
+
+            if (User != null)
+            {
+                if (User.role != "Admin")
+                {
+                    return View("UnableToAccess");
+                }
+                else
+                {
+                    List<SelectListItem> Roles = new List<SelectListItem>();
+                    Roles.Add(new SelectListItem
+                    {
+                        Text = "Teacher",
+                        Value = "Teacher"
+                    });
+                    Roles.Add(new SelectListItem
+                    {
+                        Text = "Student",
+                        Value = "Student"
+                    });
+                    Roles.Add(new SelectListItem
+                    {
+                        Text = "Admin",
+                        Value = "Admin"
+                    });
+                    Roles.Add(new SelectListItem
+                    {
+                        Text = "TeacherAdmin",
+                        Value = "TeacherAdmin"
+                    });
+
+                    ViewBag.Roles = Roles;
+                    return View();
+                }
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
         }
 
         // POST: Users/Create
@@ -48,29 +124,61 @@ namespace Proyecto_21351029.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "account_number,complete_name,password,email,phone_number,role")] User user)
         {
-            if (ModelState.IsValid)
-            {
-                db.Users.Add(user);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+            User User = GetUser();
 
-            return View(user);
+            if (User != null)
+            {
+                if (User.role != "Admin")
+                {
+                    return View("UnableToAccess");
+                }
+                else
+                {
+                    if (ModelState.IsValid)
+                    {
+                        db.Users.Add(user);
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
+                    }
+
+                    return View(user);
+                }
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
         }
 
         // GET: Users/Edit/5
         public ActionResult Edit(string id)
         {
-            if (id == null)
+            User User = GetUser();
+
+            if (User != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (User.role != "Admin")
+                {
+                    return View("UnableToAccess");
+                }
+                else
+                {
+                    if (id == null)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    }
+                    User user = db.Users.Find(id);
+                    if (user == null)
+                    {
+                        return HttpNotFound();
+                    }
+                    return View(user);
+                }
             }
-            User user = db.Users.Find(id);
-            if (user == null)
+            else
             {
-                return HttpNotFound();
+                return RedirectToAction("Login");
             }
-            return View(user);
         }
 
         // POST: Users/Edit/5
@@ -80,28 +188,61 @@ namespace Proyecto_21351029.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "account_number,complete_name,password,email,phone_number,role")] User user)
         {
-            if (ModelState.IsValid)
+            User User = GetUser();
+
+            if (User != null)
             {
-                db.Entry(user).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (User.role != "Admin")
+                {
+                    return View("UnableToAccess");
+                }
+                else
+                {
+                    if (ModelState.IsValid)
+                    {
+                        db.Entry(user).State = EntityState.Modified;
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
+                    }
+                    return View(user);
+                }
             }
-            return View(user);
+            else
+            {
+                return RedirectToAction("Login");
+            }
         }
 
         // GET: Users/Delete/5
         public ActionResult Delete(string id)
         {
-            if (id == null)
+
+            User User = GetUser();
+
+            if (User != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (User.role != "Admin")
+                {
+                    return View("UnableToAccess");
+                }
+                else
+                {
+                    if (id == null)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    }
+                    User user = db.Users.Find(id);
+                    if (user == null)
+                    {
+                        return HttpNotFound();
+                    }
+                    return View(user);
+                }
             }
-            User user = db.Users.Find(id);
-            if (user == null)
+            else
             {
-                return HttpNotFound();
+                return RedirectToAction("Login");
             }
-            return View(user);
         }
 
         // POST: Users/Delete/5
@@ -123,5 +264,34 @@ namespace Proyecto_21351029.Controllers
             }
             base.Dispose(disposing);
         }
+
+        public ActionResult Login()
+        {
+            return View();
+        }
+        
+        [HttpPost]
+        public ActionResult Login([Bind(Include = "account_number,password")] User user)
+        {
+            User UserTemp = (from Users in db.Users
+                         where Users.account_number == user.account_number &&
+                                Users.password == user.password
+                         select Users).FirstOrDefault();
+            if (UserTemp == null)
+            {
+                return View();
+            }
+            else
+            {
+                Session["User"] = UserTemp;
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        public ActionResult UnableToAccess()
+        {
+            return View();
+        }
     }
 }
+ 

@@ -15,6 +15,7 @@ namespace Proyecto_21351029
 
     public partial class User
     {
+        [MaxLength(8)]
         [Required]
         [Display(Name = "Numero de cuenta")]
         public string account_number { get; set; }

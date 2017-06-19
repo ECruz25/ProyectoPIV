@@ -33,27 +33,67 @@ namespace Proyecto_21351029.Controllers
             }
 
             ViewBag.ClassCodes = ClassCodes;
-            return View(db.Tutorials.ToList());
+
+            User User = GetUser();
+
+            if(User == null)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+            else if (User.role == "Admin" || User.role == "TeacherAdmin")
+            {
+                return View(db.Tutorials.ToList());
+            }
+            else
+            {
+                return View("Index - ReadOnly", db.Tutorials.ToList());
+            }
+        }
+
+        protected User GetUser()
+        {
+            return Session["User"] as User;
         }
 
         public ActionResult Export()
         {
-            return View();
+            User User = GetUser();
+
+            if (User == null)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+            else if (User.role == "Admin" || User.role == "TeacherAdmin")
+            {
+                return View();
+            }
+            else
+            {
+                return View("Index - ReadOnly", db.Tutorials.ToList());
+            }
         }
 
         // GET: Tutorials/Details/5
         public ActionResult Details(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             Tutorial tutorial = db.Tutorials.Find(id);
+            User User = GetUser();
             if (tutorial == null)
             {
                 return HttpNotFound();
             }
-            return View(tutorial);
+            if (User == null)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+            else if (User.role == "Admin" || User.role == "TeacherAdmin")
+            {
+                return View(tutorial);
+            }
+            else
+            {
+                return View("Index - ReadOnly", db.Tutorials.ToList());
+            }
         }
 
         // GET: Tutorials/Create
@@ -91,7 +131,20 @@ namespace Proyecto_21351029.Controllers
 
             ViewBag.ClassCodes = ClassCodes;
             ViewBag.Teachers = Teachers;
-            return View();
+            User User = GetUser();
+
+            if (User == null)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+            else if (User.role == "Admin" || User.role == "TeacherAdmin")
+            {
+                return View();
+            }
+            else
+            {
+                return View("Index - ReadOnly", db.Tutorials.ToList());
+            }
         }
         
         // POST: Tutorials/Create
@@ -158,23 +211,48 @@ namespace Proyecto_21351029.Controllers
 
                 ViewBag.ClassCodes = ClassCodes;
                 ViewBag.Teachers = Teachers;
-                return View();
+                User User = GetUser();
+
+                if (User == null)
+                {
+                    return RedirectToAction("Login", "Users");
+                }
+                else if (User.role == "Admin" || User.role == "TeacherAdmin")
+                {
+                    return View();
+                }
+                else
+                {
+                    return View("Index - ReadOnly", db.Tutorials.ToList());
+                }
             }
         }
 
         // GET: Tutorials/Edit/5
         public ActionResult Edit(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             Tutorial tutorial = db.Tutorials.Find(id);
             if (tutorial == null)
             {
                 return HttpNotFound();
             }
-            return View(tutorial);
+            User User = GetUser();
+            if (tutorial == null)
+            {
+                return HttpNotFound();
+            }
+            if (User == null)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+            else if (User.role == "Admin" || User.role == "TeacherAdmin")
+            {
+                return View(tutorial);
+            }
+            else
+            {
+                return View("Index - ReadOnly", db.Tutorials.ToList());
+            }
         }
 
         // POST: Tutorials/Edit/5
@@ -196,10 +274,6 @@ namespace Proyecto_21351029.Controllers
         // GET: Tutorials/Delete/5
         public ActionResult Delete(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             Tutorial tutorial = db.Tutorials.Find(id);
             if (tutorial == null)
             {
@@ -230,7 +304,16 @@ namespace Proyecto_21351029.Controllers
 
         public ActionResult CreateRequest()
         {
-            return RedirectToAction("Create", "Requests");
+            User User = GetUser();
+
+            if (User == null)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+            else
+            {
+                return RedirectToAction("Create", "Requests");
+            }
         }
 
         protected int CreateCode(int Amount)
@@ -262,46 +345,69 @@ namespace Proyecto_21351029.Controllers
 
         public ActionResult Subscribe(int id)
         {
-            Subcription Subscription = (from Subs in db.Subcriptions
-                                        where Subs.account_number == "21351029" && Subs.tutorial_code == id.ToString()
-                                        select Subs).FirstOrDefault();
+            User User = GetUser();
 
-            if(Subscription == null)
+            if (User == null)
             {
-                Tutorial Tutorial = (from Tutorials in db.Tutorials
-                                     where Tutorials.id == id
-                                     select Tutorials).FirstOrDefault();
+                return RedirectToAction("Login", "Users");
+            }
+            else
+            {
+                Subcription Subscription = (from Subs in db.Subcriptions
+                                            where Subs.account_number == "21351029" && Subs.tutorial_code == id.ToString()
+                                            select Subs).FirstOrDefault();
 
-                Tutorial.student_amount = Tutorial.student_amount + 1;
-                db.SaveChanges();
+                if (Subscription == null)
+                {
+                    Tutorial Tutorial = (from Tutorials in db.Tutorials
+                                         where Tutorials.id == id
+                                         select Tutorials).FirstOrDefault();
+
+                    Tutorial.student_amount = Tutorial.student_amount + 1;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
                 return RedirectToAction("Index");
             }
-            return RedirectToAction("Index");
         }
 
         public ActionResult ExportAmountOfTutorials()
         {
-            var Tutorials = from Tutorial in db.Tutorials
-                            select Tutorial;
 
-            StreamWriter File = new StreamWriter("Downloads\\Text.csv");
-            File.WriteLine("Tutorial Code, Amount, Date");
-            foreach (var x in Tutorials)
+            User User = GetUser();
+
+            if (User == null)
             {
-                User User = (from Users in db.Users
-                             where Users.account_number == x.tutor_code
-                             select Users).FirstOrDefault();
-
-                Class Class = (from TempClass in db.Classes
-                               where TempClass.class_code == x.class_code
-                               select TempClass).FirstOrDefault();
-
-                File.WriteLine(x.id + "," + Class.class_name + "," + x.tutorial_date + "," + x.start_date + ","
-                                 + User.complete_name + "," + x.student_amount);
+                return RedirectToAction("Login", "Users");
             }
-            File.Flush();
-            File.Close();
-            return RedirectToAction("Index");
+            else if (User.role == "Admin" || User.role == "TeacherAdmin")
+            {
+                var Tutorials = from Tutorial in db.Tutorials
+                                select Tutorial;
+
+                StreamWriter File = new StreamWriter("Downloads\\Text.csv");
+                File.WriteLine("Tutorial Code, Amount, Date");
+                foreach (var x in Tutorials)
+                {
+                    User User2 = (from Users in db.Users
+                                 where Users.account_number == x.tutor_code
+                                 select Users).FirstOrDefault();
+
+                    Class Class = (from TempClass in db.Classes
+                                   where TempClass.class_code == x.class_code
+                                   select TempClass).FirstOrDefault();
+
+                    File.WriteLine(x.id + "," + Class.class_name + "," + x.tutorial_date + "," + x.start_date + ","
+                                     + User2.complete_name + "," + x.student_amount);
+                }
+                File.Flush();
+                File.Close();
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View("Index - ReadOnly", db.Tutorials.ToList());
+            }
         }
 
         public ActionResult ExportAfterDate(DateTime StartingDate)
