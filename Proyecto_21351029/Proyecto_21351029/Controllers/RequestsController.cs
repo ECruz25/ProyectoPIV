@@ -19,7 +19,27 @@ namespace Proyecto_21351029.Controllers
         // GET: Requests
         public ActionResult Index()
         {
-            return View(db.Requests.ToList());
+            User User = GetUser();
+
+            if (User == null)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+            else if (User.role == "Admin" || User.role == "TeacherAdmin")
+            {
+                return View(db.Requests.ToList());
+            }
+            else if(User.role == "Student")
+            {
+                var Requests = from Req in db.Requests
+                               where Req.account_number == User.account_number
+                               select Req;
+                return View("Index - ReadOnly", Requests.ToList());
+            }
+            else
+            {
+                return RedirectToAction("UnableToAccess", "Users");
+            }
         }
 
         // GET: Requests/Details/5
@@ -63,7 +83,8 @@ namespace Proyecto_21351029.Controllers
         [HttpPost]
         public ActionResult Create([Bind(Include = "request_date,class_code,hour")] Request request)
         {
-            request.account_number = "21351029";
+            User user = GetUser();
+            request.account_number = user.account_number;
             int y = 0;
             var RequestsByUser = (from User in db.Requests
                                   where User.account_number == request.account_number
@@ -91,6 +112,20 @@ namespace Proyecto_21351029.Controllers
                     db.Requests.Add(request);
                     db.SaveChanges();
                 }
+                var Classes = from TempClasses in db.Classes
+                              select TempClasses;
+                List<SelectListItem> ClassCodes = new List<SelectListItem>();
+
+                foreach (var x in Classes)
+                {
+                    ClassCodes.Add(new SelectListItem
+                    {
+                        Text = x.class_name,
+                        Value = x.class_code.ToString()
+                    });
+                }
+
+                ViewBag.ClassCodes = ClassCodes;
                 return RedirectToAction("Index");
             }
             else
@@ -213,6 +248,11 @@ namespace Proyecto_21351029.Controllers
                             norwCulture.DateTimeFormat.CalendarWeekRule,
                             norwCulture.DateTimeFormat.FirstDayOfWeek);
             return weekNo;
+        }
+        
+        protected User GetUser()
+        {
+            return Session["User"] as User;
         }
     }
 }

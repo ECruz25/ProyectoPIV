@@ -17,46 +17,86 @@ namespace Proyecto_21351029.Controllers
         // GET: Classes
         public ActionResult Index()
         {
-            return View(db.Classes.ToList());
+            User user = GetUser();
+
+            if(user == null)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+            else if(user.role == "Admin")
+            {
+                return View(db.Classes.ToList());
+            }
+            else
+            {
+                return RedirectToAction("UnableToAccess", "Users");
+            }
         }
 
         // GET: Classes/Details/5
         public ActionResult Details(string id)
         {
-            if (id == null)
+            User user = GetUser();
+
+            if (user == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Login", "Users");
             }
-            Class @class = db.Classes.Find(id);
-            if (@class == null)
+            else if (user.role == "Admin")
             {
-                return HttpNotFound();
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Class @class = db.Classes.Find(id);
+                if (@class == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(@class);
             }
-            return View(@class);
+            else
+            {
+                return RedirectToAction("UnableToAccess", "Users");
+            }
         }
 
         // GET: Classes/Create
         public ActionResult Create()
         {
-            List<SelectListItem> Teachers = new List<SelectListItem>();
+            User user = GetUser();
 
-            var Users = from TempUser in db.Users
-                        select TempUser;
-
-            foreach (var Teacher in Users)
+            if (user == null)
             {
-                if (Teacher.role == "Teacher")
-                {
-                    Teachers.Add(new SelectListItem
-                    {
-                        Text = Teacher.complete_name,
-                        Value = Teacher.account_number
-                    });
-                }
+                return RedirectToAction("Login", "Users");
             }
+            else if (user.role == "Admin")
+            {
+                List<SelectListItem> Teachers = new List<SelectListItem>();
 
-            ViewBag.Teachers = Teachers;
-            return View();
+                var Users = from TempUser in db.Users
+                            select TempUser;
+
+                foreach (var Teacher in Users)
+                {
+                    if (Teacher.role == "Teacher")
+                    {
+                        Teachers.Add(new SelectListItem
+                        {
+                            Text = Teacher.complete_name,
+                            Value = Teacher.account_number
+                        });
+                    }
+                }
+
+                ViewBag.Teachers = Teachers;
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("UnableToAccess", "Users");
+            }
+            
         }
 
         // POST: Classes/Create
@@ -80,16 +120,31 @@ namespace Proyecto_21351029.Controllers
         // GET: Classes/Edit/5
         public ActionResult Edit(string id)
         {
-            if (id == null)
+            User user = GetUser();
+            if(user == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Login", "Users");
             }
-            Class @class = db.Classes.Find(id);
-            if (@class == null)
+            else
             {
-                return HttpNotFound();
+                if (user.role == "Admin")
+                {
+                    if (id == null)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    }
+                    Class @class = db.Classes.Find(id);
+                    if (@class == null)
+                    {
+                        return HttpNotFound();
+                    }
+                    return View(@class);
+                }
+                else
+                {
+                    return RedirectToAction("UnableToAccess", "Users");
+                }
             }
-            return View(@class);
         }
 
         // POST: Classes/Edit/5
@@ -111,16 +166,31 @@ namespace Proyecto_21351029.Controllers
         // GET: Classes/Delete/5
         public ActionResult Delete(string id)
         {
-            if (id == null)
+            User User = GetUser();
+            if (User != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if(User.role == "Admin")
+                {
+                    if (id == null)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    }
+                    Class @class = db.Classes.Find(id);
+                    if (@class == null)
+                    {
+                        return HttpNotFound();
+                    }
+                    return View(@class);
+                }
+                else
+                {
+                    return View("UnableToAccess", "Users");
+                }
             }
-            Class @class = db.Classes.Find(id);
-            if (@class == null)
+            else
             {
-                return HttpNotFound();
+                return RedirectToAction("Login", "Users");
             }
-            return View(@class);
         }
 
         // POST: Classes/Delete/5
@@ -168,6 +238,11 @@ namespace Proyecto_21351029.Controllers
             {
                 return false;
             }
+        }
+
+        protected User GetUser()
+        {
+            return Session["User"] as User;
         }
     }
 }

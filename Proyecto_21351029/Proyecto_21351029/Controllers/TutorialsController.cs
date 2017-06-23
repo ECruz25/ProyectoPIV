@@ -65,6 +65,49 @@ namespace Proyecto_21351029.Controllers
             }
             else if (User.role == "Admin" || User.role == "TeacherAdmin")
             {
+                //if(tutorial.start_date == null)
+                return View();
+            }
+            else
+            {
+                return View("Index - ReadOnly", db.Tutorials.ToList());
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Export([Bind(Include = "start_date, end_date")] Tutorial tutorial)
+        {
+            User User = GetUser();
+
+            if (User == null)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+            else if (User.role == "Admin" || User.role == "TeacherAdmin")
+            {
+                if(tutorial == null)
+                {
+                    ExportAmountOfTutorials();
+                }
+                else
+                {
+                    if(tutorial.start_date > default(DateTime) && tutorial.end_date>default(DateTime))
+                    {
+                        ExportBetweenDate(tutorial.start_date, tutorial.end_date);
+                    }
+                    else if (tutorial.start_date > default(DateTime))
+                    {
+                        ExportAfterDate(tutorial.start_date);
+                    }
+                    else if(tutorial.end_date > default(DateTime))
+                    {
+                        ExportBeforeDate(tutorial.end_date);
+                    }
+                    else
+                    {
+                        ExportAmountOfTutorials();
+                    }
+                }
                 return View();
             }
             else
@@ -78,21 +121,17 @@ namespace Proyecto_21351029.Controllers
         {
             Tutorial tutorial = db.Tutorials.Find(id);
             User User = GetUser();
-            if (tutorial == null)
-            {
-                return HttpNotFound();
-            }
             if (User == null)
             {
                 return RedirectToAction("Login", "Users");
             }
-            else if (User.role == "Admin" || User.role == "TeacherAdmin")
-            {
-                return View(tutorial);
-            }
             else
             {
-                return View("Index - ReadOnly", db.Tutorials.ToList());
+                if (tutorial == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(tutorial);
             }
         }
 
@@ -163,17 +202,22 @@ namespace Proyecto_21351029.Controllers
                 User User = (from TempUser in db.Users
                              where TempUser.account_number == tutorial.tutor_code
                              select TempUser).FirstOrDefault();
+                
+                //tutorial.hour.Subtract(DateTime.Today);
 
+                TimeSpan Time = new TimeSpan(1, 0, 0);
+                TimeSpan Hour = new TimeSpan(tutorial.hour.Ticks);
                 DateTime Date = new DateTime(Convert.ToDateTime(tutorial.hour).Year, Convert.ToDateTime(tutorial.hour).Month, Convert.ToDateTime(tutorial.hour).Day);
+
                 tutorial.id = CreateCode(db.Tutorials.Count());
                 tutorial.student_amount = 0;
-                tutorial.start_date = Convert.ToDateTime(tutorial.hour);
-                tutorial.hour = tutorial.tutorial_date + (Convert.ToDateTime(tutorial.hour) - Date);
-                db.Tutorials.Add(tutorial);
-                tutorial.end_date = Convert.ToDateTime(tutorial.hour);
-                tutorial.text = tutorial.id + "," + tutorial.tutor_code;
+                tutorial.start_date = tutorial.tutorial_date + (tutorial.hour - Date);
+                //tutorial.start_date.Add(Hour);
+                tutorial.end_date = tutorial.start_date + Time;
+                tutorial.text = Class.class_name;
                 tutorial.class_name = Class.class_name;
                 tutorial.tutor_name = User.complete_name;
+                db.Tutorials.Add(tutorial);
                 db.SaveChanges();   
                 return RedirectToAction("Index");   
             }
@@ -260,7 +304,7 @@ namespace Proyecto_21351029.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "tutorial_code,tutor_code,class_code,tutorial_date,tutorial_time")] Tutorial tutorial)
+        public ActionResult Edit([Bind(Include = "id,tutor_code,class_code,tutorial_date,tutorial_time")] Tutorial tutorial)
         {
             if (ModelState.IsValid)
             {
@@ -354,7 +398,7 @@ namespace Proyecto_21351029.Controllers
             else
             {
                 Subcription Subscription = (from Subs in db.Subcriptions
-                                            where Subs.account_number == "21351029" && Subs.tutorial_code == id.ToString()
+                                            where Subs.account_number == User.account_number && Subs.tutorial_code == id.ToString()
                                             select Subs).FirstOrDefault();
 
                 if (Subscription == null)
@@ -364,6 +408,15 @@ namespace Proyecto_21351029.Controllers
                                          select Tutorials).FirstOrDefault();
 
                     Tutorial.student_amount = Tutorial.student_amount + 1;
+                    var subs = from Subss in db.Subcriptions
+                                         select Subss;
+                    Subcription Sub = new Subcription()
+                    {
+                        subcription_code = "s" + subs.Count() + 1,
+                        account_number = User.account_number,
+                        tutorial_code = id.ToString()
+                    };
+                    db.Subcriptions.Add(Sub);
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
@@ -373,7 +426,6 @@ namespace Proyecto_21351029.Controllers
 
         public ActionResult ExportAmountOfTutorials()
         {
-
             User User = GetUser();
 
             if (User == null)
@@ -384,9 +436,12 @@ namespace Proyecto_21351029.Controllers
             {
                 var Tutorials = from Tutorial in db.Tutorials
                                 select Tutorial;
-
-                StreamWriter File = new StreamWriter("Downloads\\Text.csv");
-                File.WriteLine("Tutorial Code, Amount, Date");
+                
+                string str = Environment.GetFolderPath(
+                         System.Environment.SpecialFolder.MyDocuments);
+                StreamWriter file = new StreamWriter(str+"\\text2.txt");
+                file.WriteLine("Tutorial Code, Class Name, Tutorial Date, Start Date, Tutor, Amount");
+                
                 foreach (var x in Tutorials)
                 {
                     User User2 = (from Users in db.Users
@@ -397,11 +452,11 @@ namespace Proyecto_21351029.Controllers
                                    where TempClass.class_code == x.class_code
                                    select TempClass).FirstOrDefault();
 
-                    File.WriteLine(x.id + "," + Class.class_name + "," + x.tutorial_date + "," + x.start_date + ","
+                    file.WriteLine(x.id + "," + Class.class_name + "," + x.tutorial_date + "," + x.start_date + ","
                                      + User2.complete_name + "," + x.student_amount);
                 }
-                File.Flush();
-                File.Close();
+                file.Flush();
+                file.Close();
                 return RedirectToAction("Index");
             }
             else
@@ -412,35 +467,64 @@ namespace Proyecto_21351029.Controllers
 
         public ActionResult ExportAfterDate(DateTime StartingDate)
         {
-            var Tutorials = from Tutorial in db.Tutorials
-                            where Tutorial.tutorial_date >= StartingDate
-                            select Tutorial;
-
-            StreamWriter File = new StreamWriter("C:\\Users\\Edwin\\Documents\\SaveHere\\Text.csv");
-            File.WriteLine("Tutorial Code, Amount");
-            foreach (var x in Tutorials)
+            try
             {
-                File.WriteLine(x.id + ", " + x.student_amount);
+                var Tutorials = from Tutorial in db.Tutorials
+                                where Tutorial.tutorial_date >= StartingDate
+                                select Tutorial;
+
+                string str = Environment.GetFolderPath(
+                                         System.Environment.SpecialFolder.MyDocuments);
+                StreamWriter file = new StreamWriter(str + "\\text2.txt");
+                file.WriteLine("Total de tutorias programadas despues de " + StartingDate.ToString() + " son: " + Tutorials.Count());
+                file.Flush();
+                return View("Export");
             }
-            File.Flush();
-            return View("Export");
+            catch(Exception ex)
+            {
+                return HttpNotFound();
+            }
         }
 
         public ActionResult ExportBetweenDate(DateTime StartingDate, DateTime EndDate)
         {
-            var Tutorials = from Tutorial in db.Tutorials
-                            where Tutorial.tutorial_date >= StartingDate && Tutorial.tutorial_date <= EndDate
-                            select Tutorial;
+            try
+            {
+                var Tutorials = from Tutorial in db.Tutorials
+                                where Tutorial.tutorial_date >= StartingDate && Tutorial.tutorial_date <= EndDate
+                                select Tutorial;
 
-            return View("Export");
+                string str = Environment.GetFolderPath(
+                                             System.Environment.SpecialFolder.MyDocuments);
+                StreamWriter file = new StreamWriter(str + "\\text2.txt");
+                file.WriteLine("Total de tutorias programadas entre las fechas seleccionadas son: " + Tutorials.Count());
+                file.Flush();
+                return View("Export");
+            }
+            catch(Exception ex)
+            {
+                return HttpNotFound();
+            }
         }
+
         public ActionResult ExportBeforeDate(DateTime EndDate)
         {
-            var Tutorials = from Tutorial in db.Tutorials
-                            where Tutorial.tutorial_date <= EndDate
-                            select Tutorial;
+            try { 
 
-            return View("Export");
+                var Tutorials = from Tutorial in db.Tutorials
+                                where Tutorial.tutorial_date <= EndDate
+                                select Tutorial;
+                string str = Environment.GetFolderPath(
+                                             System.Environment.SpecialFolder.MyDocuments);
+                StreamWriter file = new StreamWriter(str + "\\text2.txt");
+                file.WriteLine("Total de tutorias programadas hasta " + EndDate.ToString() + " son: " + Tutorials.Count());
+                file.Flush();
+                return View("Export");
+            }
+            catch (Exception ex)
+            {
+                return HttpNotFound();
+            }
         }
     }
 }

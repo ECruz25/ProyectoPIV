@@ -136,11 +136,17 @@ namespace Proyecto_21351029.Controllers
                 {
                     if (ModelState.IsValid)
                     {
-                        db.Users.Add(user);
-                        db.SaveChanges();
-                        return RedirectToAction("Index");
+                        try
+                        {
+                            db.Users.Add(user);
+                            db.SaveChanges();
+                            return RedirectToAction("Index");
+                        }
+                        catch (Exception ex)
+                        {
+                            return View("ErrorCreating");
+                        }
                     }
-
                     return View(user);
                 }
             }
@@ -159,7 +165,7 @@ namespace Proyecto_21351029.Controllers
             {
                 if (User.role != "Admin")
                 {
-                    return View("UnableToAccess");
+                    return View("EditMyUser", User.account_number);
                 }
                 else
                 {
@@ -172,6 +178,30 @@ namespace Proyecto_21351029.Controllers
                     {
                         return HttpNotFound();
                     }
+
+                    List<SelectListItem> Roles = new List<SelectListItem>();
+                    Roles.Add(new SelectListItem
+                    {
+                        Text = "Teacher",
+                        Value = "Teacher"
+                    });
+                    Roles.Add(new SelectListItem
+                    {
+                        Text = "Student",
+                        Value = "Student"
+                    });
+                    Roles.Add(new SelectListItem
+                    {
+                        Text = "Admin",
+                        Value = "Admin"
+                    });
+                    Roles.Add(new SelectListItem
+                    {
+                        Text = "TeacherAdmin",
+                        Value = "TeacherAdmin"
+                    });
+
+                    ViewBag.Roles = Roles;
                     return View(user);
                 }
             }
@@ -194,7 +224,49 @@ namespace Proyecto_21351029.Controllers
             {
                 if (User.role != "Admin")
                 {
-                    return View("UnableToAccess");
+                    return View("EditMyUser", User.account_number);
+                }
+                else
+                {
+                    if (ModelState.IsValid)
+                    {
+                        db.Entry(user).State = EntityState.Modified;
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
+                    }
+                    return View(user);
+                }
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
+        }
+        
+        public ActionResult EditMyUser()
+        {
+            User User = GetUser();
+            if (User == null)
+            {
+                return HttpNotFound();
+            }
+            return View(User);
+        }
+
+        // POST: Users/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditMyUser([Bind(Include = "complete_name,password,email,phone_number")] User user)
+        {
+            User User = GetUser();
+
+            if (User != null)
+            {
+                if (User.role != "Admin")
+                {
+                    return RedirectToAction("EditMyUser", User.account_number);
                 }
                 else
                 {
@@ -216,7 +288,6 @@ namespace Proyecto_21351029.Controllers
         // GET: Users/Delete/5
         public ActionResult Delete(string id)
         {
-
             User User = GetUser();
 
             if (User != null)
@@ -279,7 +350,7 @@ namespace Proyecto_21351029.Controllers
                          select Users).FirstOrDefault();
             if (UserTemp == null)
             {
-                return View();
+                return RedirectToAction("SignUp");
             }
             else
             {
@@ -288,7 +359,67 @@ namespace Proyecto_21351029.Controllers
             }
         }
 
+        public ActionResult SignUp()
+        {
+            User User = GetUser();
+
+            if (User != null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                return View();
+            }
+        }
+
+        [HttpPost]
+        public ActionResult SignUp([Bind(Include = "account_number,complete_name,email,phone_number")] User user)
+        {
+            try
+            {
+                user.role = "Student";
+                user.password = user.account_number;
+                db.Users.Add(user);
+                db.SaveChanges();
+
+                Session["User"] = user;
+                return RedirectToAction("Index", "Home");
+            }
+            catch(Exception ex)
+            {
+                return View("ErrorCreating");
+            }
+        }
+
+        public ActionResult SignOut()
+        {
+            Session["User"] = null;
+            return RedirectToAction("Index", "Home");
+        }
+        /*
+        public ActionResult UpdatePassword(string OldPassword, string NewPassword)
+        {
+            User User = GetUser();
+            if(User != null)
+            {
+                if(User.password.Equals(OldPassword))
+                {
+                    User.password = NewPassword;
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+
+                }
+            }
+        }
+        */
         public ActionResult UnableToAccess()
+        {
+            return View();
+        }
+        public ActionResult ErrorCreating()
         {
             return View();
         }

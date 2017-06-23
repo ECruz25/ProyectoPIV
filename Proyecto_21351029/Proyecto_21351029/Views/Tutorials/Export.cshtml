@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Proyecto_21351029.Tutorial>
+﻿@model Proyecto_21351029.Tutorial
 
 @{
     ViewBag.Title = "Export";
@@ -7,11 +7,38 @@
 
 <h2>Export</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
 
-    @Html.ActionLink("Export2", "Export2") |
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
 
-</table>
+    <div class="form-horizontal">
+        <h4>Tutorial</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.start_date, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.start_date, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.end_date, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.end_date, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Export" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

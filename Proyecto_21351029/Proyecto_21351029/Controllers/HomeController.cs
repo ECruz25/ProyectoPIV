@@ -16,7 +16,7 @@ namespace Proyecto_21351029.Controllers
                          select User2).FirstOrDefault();
 
             //Session["Admin"]
-            //Session["User"] = User;
+            //Session["User"] = null;
             return View();
         }
 

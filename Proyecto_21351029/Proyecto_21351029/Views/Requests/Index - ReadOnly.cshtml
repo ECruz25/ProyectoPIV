@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Proyecto_21351029.Request>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table id ="requests" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.request_date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.request_time)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.class_code)
+            </th>
+            <th>
+                Opciones
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.request_date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.request_time)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.class_code)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { id = item.request_code })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#requests").DataTable();
+        })
+    </script>
+}

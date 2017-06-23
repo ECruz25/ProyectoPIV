@@ -19,6 +19,7 @@ namespace Proyecto_21351029.Controllers
         {
             //Being initialized in that way, scheduler will use CalendarController.Data as a the datasource and CalendarController.Save to process changes
             var scheduler = new DHXScheduler(this);
+            scheduler.Config.isReadonly = true;
             /*var cl = new LightboxSelect("type", "Type");
             select.AddOptions(new List<object>{
                 new { key = 1, label = "Job" },
@@ -49,7 +50,7 @@ namespace Proyecto_21351029.Controllers
 
             return View(scheduler);
         }
-
+        /*
         public ContentResult Data()
         {
             var data = new SchedulerAjaxData(new ProyectoEntities().Tutorials);
@@ -65,7 +66,7 @@ namespace Proyecto_21351029.Controllers
             changedEvent.tutor_code = "0";
             var data = new ProyectoEntities();
             /*try
-            {*/
+            {*//*
                 switch (action.Type)
                 {
                     case DataActionTypes.Insert:
@@ -87,9 +88,10 @@ namespace Proyecto_21351029.Controllers
             catch
             {
                 action.Type = DataActionTypes.Error;
-            }*/
+            }*//*
             return (ContentResult)new AjaxSaveResponse(action);
         }
+        */
     }
 }
 
