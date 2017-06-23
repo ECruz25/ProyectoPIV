@@ -30,6 +30,11 @@
                     {
                         <li>@Html.ActionLink("SignOut", "SignOut", "Users")</li>
                     }
+                    else
+                    {
+                        <li>@Html.ActionLink("Log In", "Login", "Users")</li>
+                        <li>@Html.ActionLink("Sign Up", "SignUp", "Users")</li>
+                    }
                 </ul>
             </div>
         </div>
